@@ -9,8 +9,8 @@ import lombok.Data;
 public class TypeFertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdTypeFertilizer;
-    @Column(name = "NameTypeFertilizer", nullable = false)
-    private String NameTypeFertilizer;
-    private boolean IsDelete;
+    private String idTypeFertilizer;
+    @Column(name = "nameTypeFertilizer", nullable = false)
+    private String nameTypeFertilizer;
+    private boolean isDelete;
 }

@@ -4,8 +4,9 @@ package Nhom02.Nhom02HappyFarm.config;
 import org.springframework.context.annotation.Configuration;
 
 
-@Configuration
+import java.net.http.HttpRequest;
 
-public class ConfigScraper {
-    //toDo config OAuth2
+@Configuration
+public class ConfigApi {
+    //toDo Config api autherzie
 }

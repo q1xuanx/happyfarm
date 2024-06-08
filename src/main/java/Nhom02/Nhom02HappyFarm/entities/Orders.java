@@ -12,20 +12,20 @@ import java.sql.Date;
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdOrders;
+    private String idOrders;
 
-    private Date OrderDate;
+    private Date orderDate;
 
-    private Date ReceiveDate;
+    private Date receiveDate;
 
     @DefaultValue(value = "Đã Đặt")
-    private String StatusOrders;
+    private String statusOrders;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdUser")
-    private Users IdUserOrder;
+    @JoinColumn(name = "idUser")
+    private Users idUserOrder;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdVoucher")
-    private VoucherDiscount IdVoucher;
+    @JoinColumn(name = "idVoucher")
+    private VoucherDiscount idVoucher;
 }

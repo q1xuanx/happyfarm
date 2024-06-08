@@ -12,6 +12,6 @@ import lombok.Data;
 public class UserRoles {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdRoles;
-    private String NameRoles;
+    private String idRoles;
+    private String nameRoles;
 }

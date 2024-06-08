@@ -12,7 +12,7 @@ import lombok.Data;
 public class VoucherDiscount {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdVoucher;
-    private String CodeVoucher;
-    private int DiscountPercent;
+    private String idVoucher;
+    private String codeVoucher;
+    private int discountPercent;
 }

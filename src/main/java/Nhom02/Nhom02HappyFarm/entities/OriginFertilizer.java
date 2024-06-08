@@ -11,7 +11,7 @@ import lombok.Data;
 public class OriginFertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdOrigin;
-    private String NameOrigin;
-    private boolean IsDelete;
+    private String idOrigin;
+    private String nameOrigin;
+    private boolean isDelete;
 }

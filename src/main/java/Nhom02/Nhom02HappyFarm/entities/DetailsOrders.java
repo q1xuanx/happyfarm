@@ -8,12 +8,12 @@ import lombok.Data;
 public class DetailsOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdDetailsOrders;
-    private int Quantity;
-    @JoinColumn(name="IdFertilizer")
+    private String idDetailsOrders;
+    private int quantity;
+    @JoinColumn(name="idFertilizer")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Fertilizer IdFertilizer;
-    @JoinColumn(name = "IdOrder")
+    private Fertilizer idFertilizer;
+    @JoinColumn(name = "idOrder")
     @ManyToOne(fetch = FetchType.EAGER)
-    private Orders IdOrders;
+    private Orders idOrders;
 }

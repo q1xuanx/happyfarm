@@ -18,37 +18,37 @@ import java.util.List;
 public class Fertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdFertilizer;
+    private String idFertilizer;
     @Column(name = "NameFertilizer", nullable = false)
-    private String NameFertilizer;
+    private String nameFertilizer;
     @Column(name = "Description", nullable = false)
-    private String Description;
+    private String description;
     @Column(name = "Price", nullable = false)
-    private float Price;
+    private float price;
     @Column(name = "Details", nullable = false)
-    private String Details;
+    private String details;
     @Column(name= "ImageRepresent", nullable = false)
-    private String ImageRepresent;
+    private String imageRepresent;
     @Column(name= "ImageOptional", nullable = false)
     @ElementCollection
-    private List<String> ImageOptional;
+    private List<String> imageOptional;
     @Column(name="IsDelete")
-    private Boolean IsDelete;
+    private Boolean isDelete;
     //Xuất xứ
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdOrigin")
-    private OriginFertilizer OriginFer;
+    @JoinColumn(name = "idOrigin")
+    private OriginFertilizer originFer;
     //Loại phân bón
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdTypeFertilizer")
-    private TypeFertilizer Type;
+    @JoinColumn(name = "idTypeFertilizer")
+    private TypeFertilizer type;
     //Brand
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdBrand")
-    private Brand BrandName;
+    @JoinColumn(name = "idBrand")
+    private Brand brandName;
     //Image File Save
     @Transient
-    private MultipartFile FileImageRepresent;
+    private MultipartFile fileImageRepresent;
     @Transient
-    private MultipartFile[] FileImageOptional;
+    private MultipartFile[] fileImageOptional;
 }

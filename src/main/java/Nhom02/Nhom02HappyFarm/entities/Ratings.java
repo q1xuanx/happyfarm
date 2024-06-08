@@ -10,15 +10,15 @@ import lombok.Data;
 public class Ratings {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdRatings;
-    private String Comments;
+    private String idRatings;
+    private String comments;
     @Min(1)
     @Max(5)
-    private int Points;
+    private int points;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdUser")
-    private Users IdUser;
+    @JoinColumn(name = "idUser")
+    private Users idUser;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdFertilizer")
-    private Fertilizer IdFertilizer;
+    @JoinColumn(name = "idFertilizer")
+    private Fertilizer idFertilizer;
 }

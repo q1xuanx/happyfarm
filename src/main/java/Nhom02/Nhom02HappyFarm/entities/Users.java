@@ -10,13 +10,13 @@ import java.util.Date;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdUser;
-    private String FullName;
+    private String idUser;
+    private String fullName;
     @Column(name = "DateOfBirth")
-    private Date DOB;
-    private String Password;
-    private boolean IsBanned;
+    private Date dOB;
+    private String password;
+    private boolean isBanned;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdRoles")
-    private UserRoles Roles;
+    @JoinColumn(name = "idRoles")
+    private UserRoles roles;
 }

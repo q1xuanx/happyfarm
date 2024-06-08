@@ -8,9 +8,9 @@ import lombok.Data;
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdBrand;
+    private String idBrand;
     @Column(nullable = false)
-    private String NameBrand;
+    private String nameBrand;
     @Column(name = "IsDelete")
-    private boolean IsDelete;
+    private boolean isDelete;
 }

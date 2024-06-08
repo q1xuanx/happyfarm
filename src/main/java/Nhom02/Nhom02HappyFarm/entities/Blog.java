@@ -9,11 +9,11 @@ import java.sql.Date;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String IdBlog;
-    private String Details;
-    private Date TimeCreate;
+    private String idBlog;
+    private String details;
+    private Date timeCreate;
     
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdUser")
-    private Users UserCreate;
+    @JoinColumn(name = "idUser")
+    private Users userCreate;
 }
