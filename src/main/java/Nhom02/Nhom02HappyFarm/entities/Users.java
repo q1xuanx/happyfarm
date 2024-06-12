@@ -12,6 +12,7 @@ public class Users {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idUser;
     private String fullName;
+
     @Column(name = "DateOfBirth")
     private Date dOB;
     private String password;
