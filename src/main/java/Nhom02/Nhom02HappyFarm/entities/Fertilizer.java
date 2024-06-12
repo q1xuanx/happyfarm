@@ -33,7 +33,7 @@ public class Fertilizer {
     @ElementCollection
     private List<String> imageOptional;
     @Column(name="IsDelete")
-    private Boolean isDelete;
+    private boolean isDelete;
     //Xuất xứ
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrigin")
