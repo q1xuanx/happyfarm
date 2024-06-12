@@ -27,6 +27,7 @@ public class OriginApi {
             @ApiResponse(code = 200, message = "Tra ve thanh cong"),
             @ApiResponse(code = 204, message = "List rong"), @ApiResponse(code = 400, message = "Lỗi khi lấy list")
     })
+
     @GetMapping("/getlistorigin")
     public ResponseEntity<List<OriginFertilizer>> getListOrigin(@RequestParam(required = false) String nameType){
         if (originService.GetAllOriginFertilizer(nameType).isEmpty()){
@@ -97,6 +98,8 @@ public class OriginApi {
             @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
+
+
     @GetMapping("/notdeleteorigin")
     public ResponseEntity<List<OriginFertilizer>> originIsNotDelete(){
         List<OriginFertilizer> listOrigin = originService.GetAllOriginNotDelete();

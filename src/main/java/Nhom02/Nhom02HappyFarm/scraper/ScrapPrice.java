@@ -15,10 +15,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/scraper")
 public class ScrapPrice {
-    
+
+
     @GetMapping("/getcoffeeprice")
     public ResponseEntity<List<Price>> GetPriceCoffee() throws IOException {
         List <Price> lst = new ArrayList<>();
@@ -41,6 +43,8 @@ public class ScrapPrice {
         }
         return ResponseEntity.ok(lst);
     }
+
+
     @GetMapping("/getpepperprice")
     public ResponseEntity<List<Price>> getPepperPrices() throws IOException {
         List<Price> lst = new ArrayList<>();
@@ -63,4 +67,6 @@ public class ScrapPrice {
         }
         return ResponseEntity.ok(lst);
     }
+
+
 }

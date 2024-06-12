@@ -22,9 +22,15 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8080")
 @Api(value = "Manage Brand Of Fertilizer")
 public class BrandApi {
+
+
     private final BrandService brandService;
+
+
+
+    // get list
     @ApiOperation(value = "Tra ve 1 list cac thuong hieu bao gom ca xoa va chua xoa")
-    @ApiResponses(value ={
+    @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Tra ve thanh cong"),
         @ApiResponse(code = 204, message = "List rong"), @ApiResponse(code = 400, message = "Lỗi khi lấy list")
     })
@@ -35,6 +41,8 @@ public class BrandApi {
         }
         return new ResponseEntity<>(brandService.GetAllBrand(nameBrand), HttpStatus.OK);
     }
+
+    // add brand
     @ApiOperation(value = "Thêm mới 1 brand vào db")
     @ApiResponses(value ={
             @ApiResponse(code = 201, message = "Tạo mới thành công"),
@@ -49,6 +57,10 @@ public class BrandApi {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
+    // findByName
     @ApiOperation(value = "Tìm 1 brand với tên trong DB (ten phải nhập đúng thì mới trả ra kết quả)")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Kết quả trả về thành công"),
@@ -62,6 +74,9 @@ public class BrandApi {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+
+    // update brand
     @ApiOperation(value = "Chỉnh sua brand trong DB")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Chinh sua thanh cong"),
@@ -77,6 +92,8 @@ public class BrandApi {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+
+    // delete brand
     @ApiOperation(value = "Xóa 1 brand với ID là tham số truyền vào")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Thành công"),
@@ -91,6 +108,8 @@ public class BrandApi {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    // list brand not delete
     @ApiOperation(value = "Trả về các brand với IsDelete = false (Trả ve cac brand chưa xóa)")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Thành công"),
@@ -105,4 +124,6 @@ public class BrandApi {
         }
         return new ResponseEntity<>(listBrand, HttpStatus.OK);
     }
+
+
 }

@@ -16,6 +16,7 @@ public class BlogService {
     public List<Blog> getAllBlog(){
         return blog.findAll();
     }
+
     public Blog getBlog(String id){
         Optional<Blog> get = blog.findById(id);
         return get.orElseThrow(() -> new NoSuchElementException("Blog with id " + id + " doesnt exist"));

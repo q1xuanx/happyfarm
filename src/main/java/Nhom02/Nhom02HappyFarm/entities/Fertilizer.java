@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class Fertilizer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idFertilizer;
@@ -34,21 +35,26 @@ public class Fertilizer {
     private List<String> imageOptional;
     @Column(name="IsDelete")
     private boolean isDelete;
+
     //Xuất xứ
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idOrigin")
     private OriginFertilizer originFer;
+
     //Loại phân bón
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idTypeFertilizer")
     private TypeFertilizer type;
+
     //Brand
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idBrand")
     private Brand brandName;
+
     //Image File Save
     @Transient
     private MultipartFile fileImageRepresent;
     @Transient
     private MultipartFile[] fileImageOptional;
+
 }

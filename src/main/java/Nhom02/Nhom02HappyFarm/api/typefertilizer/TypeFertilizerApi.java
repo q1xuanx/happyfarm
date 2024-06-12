@@ -92,6 +92,9 @@ public class TypeFertilizerApi {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+
+
     @ApiOperation(value = "Xoa 1 loai phan bón")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Xoa thành công"),
