@@ -6,25 +6,24 @@ import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.springframework.stereotype.Service;
 
+
+@Service
 @RequiredArgsConstructor
 public class UserService {
 
-
-    UsersRepository  usersRepository;
+    private final UsersRepository usersRepository;
 
     public UserResponse getUsers(UserCreateRequest userCreateRequest){
         Users user = new Users();
-        UserResponse userResponse = new UserResponse();
-        userResponse.builder()
+        UserResponse userResponse = UserResponse.builder()
                 .fullName(user.getFullName())
                 .dOB(user.getDOB())
                 .roles(user.getRoles())
                 .password(user.getPassword())
                 .isBanned(user.isBanned())
                 .build();
-        return UserResponse;
+        return userResponse;
     }
-
-
 }
