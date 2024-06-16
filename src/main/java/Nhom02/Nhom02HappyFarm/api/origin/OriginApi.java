@@ -1,5 +1,6 @@
 package Nhom02.Nhom02HappyFarm.api.origin;
 
+import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.entities.OriginFertilizer;
 import Nhom02.Nhom02HappyFarm.entities.TypeFertilizer;
 import Nhom02.Nhom02HappyFarm.service.OriginService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,6 +24,33 @@ import java.util.List;
 @Api(value = "Manage Xuat Xu")
 public class OriginApi {
     private final OriginService originService;
+    @ApiOperation(value = "Tao moi 1 origin")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lay thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/neworigin")
+    public ResponseEntity<OriginFertilizer> createNew(){
+        try{
+            return new ResponseEntity<>(new OriginFertilizer(), HttpStatus.OK);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+    @ApiOperation(value = "Lay 1 xuat xu cua origin bang id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lay thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/getorigin/{id}")
+    public ResponseEntity<OriginFertilizer> getOrigin(@PathVariable String id){
+        try{
+            OriginFertilizer origin = originService.GetOriginFertilizer(id);
+            return new ResponseEntity<>(origin, HttpStatus.OK);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
     @ApiOperation(value = "Tra ve 1 list cac xuat xu bao gom ca xoa va chua xoa")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Tra ve thanh cong"),

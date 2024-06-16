@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -22,7 +23,36 @@ import java.util.List;
 public class TypeFertilizerApi {
 
     private final TypeFertilizerService typeFertilizerService;
-    @ApiOperation(value = "Tra ve 1 list cac xuat")
+
+    @ApiOperation(value = "Tao moi 1 list cac xuat xu")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve gia tri"),
+            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+    })
+    @GetMapping("/gettypefer/{id}")
+    public ResponseEntity<TypeFertilizer> getTypeferById(@PathVariable String id){
+        try{
+            return new ResponseEntity<>(typeFertilizerService.GetTypeFertilizer(id), HttpStatus.OK);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Tao moi 1 xuat xu de add")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Tao thanh cong"),
+            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+    })
+    @GetMapping("/newfer")
+    public ResponseEntity<TypeFertilizer> newFertilizer(){
+        try{
+            return new ResponseEntity<>(new TypeFertilizer(), HttpStatus.OK);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Tra ve 1 list cac xuat xu")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve list"),
             @ApiResponse(code = 204, message = "List rong"),

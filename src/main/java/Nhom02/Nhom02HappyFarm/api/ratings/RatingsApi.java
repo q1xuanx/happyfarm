@@ -1,6 +1,7 @@
 package Nhom02.Nhom02HappyFarm.api.ratings;
 
 
+import Nhom02.Nhom02HappyFarm.entities.OriginFertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Ratings;
 import Nhom02.Nhom02HappyFarm.service.RatingsService;
 import io.swagger.annotations.Api;
@@ -21,6 +22,20 @@ import java.util.List;
 @Api(value = "Api xu ly danh gia phan bon")
 public class RatingsApi {
     private final RatingsService ratingsService;
+
+    @ApiOperation(value = "Tao moi 1 ratings")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lay thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/newratings")
+    public ResponseEntity<Ratings> createNew(){
+        try{
+            return new ResponseEntity<>(new Ratings(), HttpStatus.OK);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
 
     @GetMapping("/getList")
     @ApiOperation(value = "Lay danh rating cua cac phan bon danh cho admin quan ly comment")

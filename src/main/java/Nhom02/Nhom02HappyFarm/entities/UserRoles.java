@@ -14,4 +14,5 @@ public class UserRoles {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idRoles;
     private String nameRoles;
+    private boolean isDelete;
 }
