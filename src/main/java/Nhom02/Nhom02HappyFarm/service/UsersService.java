@@ -28,8 +28,7 @@ public class UsersService {
         if(!find){
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            users.save(user);
-            UserRoles roles = rolesService.GetUserRole("7c773941-2316-427a-93cc-3e7fe0edb938");
+            UserRoles roles = rolesService.getRoleByName("User");
             user.setRoles(roles);
         }
         users.save(user);

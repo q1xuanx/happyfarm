@@ -28,6 +28,11 @@ public class UserRolesService {
         userRoles.save(userRole);
     }
 
+    public UserRoles getRoleByName(String name){
+        List<UserRoles> list = userRoles.findByNameRoles(name);
+        return list.getFirst();
+    }
+
     public UserRoles GetUserRole(String id){
         Optional<UserRoles> userRole = userRoles.findById(id);
         return userRole.orElseThrow(() -> new NoSuchElementException("No userRole with " + id + " exits!"));
