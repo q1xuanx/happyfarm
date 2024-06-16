@@ -63,65 +63,50 @@ public class UserRoleApi {
         if(getUserRole == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            usersService.AddOrEditUser(user);
+            userRolesService.AddOrEditUserRoles(userRole);
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
-    @ApiOperation(value = "Tra ve list cac user chua bi banned")
+    @ApiOperation(value = "Tra ve list cac userRole chua bi delete")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Tim thay, tra ve list user"),
+            @ApiResponse(code = 200, message = "Tim thay, tra ve list userRole"),
             @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/notbanneduser")
-    public ResponseEntity<List<Users>> notBannedUser() {
-        List<Users> users = usersService.GetUserNotBanned();
-        if(users.isEmpty()){
+    @GetMapping("/notdeleteuserrole")
+    public ResponseEntity<List<UserRoles>> notDeleteUser() {
+        List<UserRoles> userRoles = userRolesService.GetUserRoleNotDelete();
+        if(userRoles.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(userRoles, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Tim kiem ten user do admin nhap")
+    @ApiOperation(value = "Tim kiem ten userRole do admin nhap")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tim thay gia tri tra ve"),
             @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
     @GetMapping("/findbyname/{name}")
-    public ResponseEntity<List<Users>> findUserByName(@PathVariable(name = "name") String name) {
-        List<Users> users = usersService.GetUserByName(name);
-        if(users.isEmpty()){
+    public ResponseEntity<List<UserRoles>> findUserRoleByName(@PathVariable(name = "name") String name) {
+        List<UserRoles> userRoles = userRolesService.GetUserRoleByNameRole(name);
+        if(userRoles.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        return new ResponseEntity<>(userRoles, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Tim kiem ngay sinh user")
+    @ApiOperation(value = "delete 1 userRole")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Tim thay gia tri tra ve"),
-            @ApiResponse(code = 204, message = "List rong"),
-            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+            @ApiResponse(code = 200, message = "Delete thanh cong"),
+            @ApiResponse(code = 404, message = "Khong tim thay userRole can tim, co the bi xoa hoac sai id")
     })
-    @GetMapping("/findbydob/{dob}")
-    public ResponseEntity<List<Users>> findUserByDOB(@PathVariable(name = "dob") Date date) {
-        List<Users> users = usersService.GetUserByDob(date);
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
-    @ApiOperation(value = "Banned 1 user")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Banned thanh cong"),
-            @ApiResponse(code = 404, message = "Khong tim thay user can tim, co the bi xoa hoac sai id")
-    })
-    @DeleteMapping("/banneduser/{id}")
+    @DeleteMapping("/deleteuserrole/{id}")
     public ResponseEntity<List<Users>> bannedUserById(@PathVariable(name = "id") String id){
         try{
-            usersService.BannedUser(id);
+            userRolesService.DeleteUserRole(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

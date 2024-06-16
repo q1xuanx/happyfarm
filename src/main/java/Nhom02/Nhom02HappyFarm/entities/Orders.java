@@ -18,6 +18,8 @@ public class Orders {
 
     private Date receiveDate;
 
+    private String address;
+
     @DefaultValue(value = "Đã Đặt")
     private String statusOrders;
 
@@ -26,6 +28,6 @@ public class Orders {
     private Users idUserOrder;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "idVoucher")
+    @JoinColumn(name = "idVoucher", nullable = true)
     private VoucherDiscount idVoucher;
 }

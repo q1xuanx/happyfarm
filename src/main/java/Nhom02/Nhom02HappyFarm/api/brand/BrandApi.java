@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -62,12 +63,43 @@ public class BrandApi {
         }
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
+
+    @ApiOperation(value = "Lay 1 brand")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tao 1 brand thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/newBrand")
+    public ResponseEntity<Brand> createNew(){
+        try{
+            return new ResponseEntity<>(new Brand(), HttpStatus.OK);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Lay 1 brand bang id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lay thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/getbrand/{id}")
+    public ResponseEntity<Brand> getBrand(@PathVariable String id){
+        try{
+            Brand brand = brandService.GetBrand(id);
+            return new ResponseEntity<>(brand, HttpStatus.OK);
+        }catch(Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
     @ApiOperation(value = "Chỉnh sua brand trong DB")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Chinh sua thanh cong"),
             @ApiResponse(code = 404, message = "Không tìm thay Id cua brand cần chỉnh sửa")
     })
     @PutMapping("/editbrand/{id}")
+
     public ResponseEntity<Brand> editBrand(@PathVariable(name = "id") String idBrand, @RequestBody Brand brand){
         Brand getBrand = brandService.GetBrand(idBrand);
         if (getBrand == null){

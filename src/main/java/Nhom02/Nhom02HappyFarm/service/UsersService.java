@@ -1,21 +1,21 @@
 package Nhom02.Nhom02HappyFarm.service;
 
+import Nhom02.Nhom02HappyFarm.entities.UserRoles;
 import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UsersService {
     private final UsersRepository users;
-
+    private final UserRolesService rolesService;
     public List<Users> GetAllUsers(String name) {
         if(name == null){
             return users.findAll();
@@ -24,6 +24,14 @@ public class UsersService {
     }
 
     public void AddOrEditUser(Users user){
+        boolean find = users.findAll().stream().filter(s -> s.getIdUser().equals(user.getIdUser())).findFirst().isPresent();
+        if(!find){
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            users.save(user);
+            UserRoles roles = rolesService.GetUserRole("7c773941-2316-427a-93cc-3e7fe0edb938");
+            user.setRoles(roles);
+        }
         users.save(user);
     }
 

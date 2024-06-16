@@ -43,7 +43,7 @@ public class UserRolesService {
 
     public void DeleteUserRole(String id){
         UserRoles userRole = userRoles.findById(id).orElseThrow(() -> new NoSuchElementException("No userRole with " + id + " exits!"));
-        userRole.setIsDelete(true);
+        userRole.setDelete(true);
         userRoles.save(userRole);
     }
 }

@@ -32,6 +32,8 @@ public class Fertilizer {
     @Column(name= "ImageOptional", nullable = false)
     @ElementCollection
     private List<String> imageOptional;
+    @Column(name= "Nums", nullable = false)
+    private int nums;
     @Column(name="IsDelete")
     private boolean isDelete;
     //Xuất xứ
