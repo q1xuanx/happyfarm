@@ -22,6 +22,7 @@ import java.util.List;
 public class TypeFertilizerApi {
 
     private final TypeFertilizerService typeFertilizerService;
+
     @ApiOperation(value = "Tra ve 1 list cac xuat")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve list"),

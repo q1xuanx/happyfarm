@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TypeFertilizerService {
     private final TypeFertilizerRepository typeFer;
+
     public List<TypeFertilizer> GetAllTypeFertilizer(String name){
         if(name == null){
             return typeFer.findAll();

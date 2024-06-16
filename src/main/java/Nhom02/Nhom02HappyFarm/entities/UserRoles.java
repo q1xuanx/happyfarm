@@ -13,5 +13,6 @@ public class UserRoles {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idRoles;
+
     private String nameRoles;
 }
