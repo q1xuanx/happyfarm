@@ -18,7 +18,7 @@ public class Users {
 
     @Column(name = "DateOfBirth")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dOB;
+    private Date dob;
 
     private String password;
 

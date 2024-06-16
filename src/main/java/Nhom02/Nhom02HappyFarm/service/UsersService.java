@@ -49,7 +49,7 @@ public class UsersService {
     }
 
     public List<Users> GetUserByDob(Date date){
-        return users.findBydOB(date);
+        return users.findByDob(date);
     }
 
     public void BannedUser(String id){
