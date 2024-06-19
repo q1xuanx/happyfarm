@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OriginService {
     private final OriginRepository origin;
+
     public List<OriginFertilizer> GetAllOriginFertilizer(String name){
         if(name == null){
             return origin.findAll();
