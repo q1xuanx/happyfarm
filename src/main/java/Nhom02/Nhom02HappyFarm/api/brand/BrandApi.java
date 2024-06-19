@@ -9,13 +9,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/brand")
@@ -68,7 +64,6 @@ public class BrandApi {
         }
         return ResponseEntity.ok(responseHandler.successResponse("Succesfully get list", list));
     }
-
     @ApiOperation(value = "Lay 1 brand")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tao 1 brand thanh cong"),
