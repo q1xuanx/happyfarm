@@ -3,9 +3,12 @@ package Nhom02.Nhom02HappyFarm.entities;
 import jakarta.persistence.*;
 import jakarta.ws.rs.DefaultValue;
 import lombok.Data;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 
 
 import java.sql.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -30,4 +33,6 @@ public class Orders {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idVoucher", nullable = true)
     private VoucherDiscount idVoucher;
+    @OneToMany(mappedBy = "idOrders")
+    private List<DetailsOrders> listOrders;
 }

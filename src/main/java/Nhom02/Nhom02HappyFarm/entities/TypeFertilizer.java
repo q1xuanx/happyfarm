@@ -2,10 +2,14 @@ package Nhom02.Nhom02HappyFarm.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Data
 @Entity
+@Getter
+@Setter
 public class TypeFertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -12,7 +12,7 @@ public class Blog {
     private String idBlog;
     private String details;
     private Date timeCreate;
-    
+    private String title;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUser")
     private Users userCreate;
