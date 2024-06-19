@@ -1,10 +1,13 @@
 package Nhom02.Nhom02HappyFarm.api.fertilizer;
 
 
+import Nhom02.Nhom02HappyFarm.entities.Blog;
 import Nhom02.Nhom02HappyFarm.entities.Brand;
 import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
+import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.service.FertilizerService;
 import io.swagger.annotations.*;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +24,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FertilizerApi {
     private final FertilizerService fertilizerService;
+    private final ResponseHandler responseHandler;
     @ApiOperation(value = "Tao moi 1 fertilizer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lay thanh cong"),
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
     })
     @GetMapping("/newFertilizer")
-    public ResponseEntity<Fertilizer> createNew(){
+    public ResponseEntity<Object> createNew(){
         try{
-            return new ResponseEntity<>(new Fertilizer(), HttpStatus.OK);
+            return ResponseEntity.ok(responseHandler.successResponse("Tao moi thanh cong", new Fertilizer()));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
     @ApiOperation(value = "Lay 1 phan bon bang id")
@@ -40,23 +44,26 @@ public class FertilizerApi {
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
     })
     @GetMapping("/getfertilizer/{id}")
-    public ResponseEntity<Fertilizer> getFertilizer(@PathVariable String id){
+    public ResponseEntity<Object> getFertilizer(@PathVariable String id){
         try{
             Fertilizer fertilizer = fertilizerService.GetFertilizer(id);
-            return new ResponseEntity<>(fertilizer, HttpStatus.OK);
+            if (fertilizer == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", fertilizer));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
     @PostMapping("/addnew")
     @ApiOperation(value = "Thêm mới 1 phan bón")
     @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình thêm mới")})
-    public ResponseEntity<Fertilizer> uploadImage(@ModelAttribute Fertilizer fertilizer) throws IOException {
+    public ResponseEntity<Object> createNewFertilizer(@Valid @ModelAttribute Fertilizer fertilizer) throws IOException {
         try {
             fertilizerService.addNew(fertilizer);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return ResponseEntity.ok(responseHandler.successResponse("Tạo mới thành công", fertilizer));
         }catch (Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = 1 và 0")

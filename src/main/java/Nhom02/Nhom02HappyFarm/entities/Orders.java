@@ -35,4 +35,8 @@ public class Orders {
     private VoucherDiscount idVoucher;
     @OneToMany(mappedBy = "idOrders")
     private List<DetailsOrders> listOrders;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idMethod")
+    private PaymentMethod paymentMethod;
 }

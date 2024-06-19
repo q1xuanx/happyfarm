@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface UsersRepository extends JpaRepository<Users, String> {
     List<Users> findByIsBanned(Boolean bool);
-    List<Users> findByDob(Date date);
     List<Users> findByFullName(String name);
 }

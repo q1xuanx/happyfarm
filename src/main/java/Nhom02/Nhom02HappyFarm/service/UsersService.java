@@ -23,15 +23,31 @@ public class UsersService {
         return users.findAll().stream().filter(typename -> typename.getFullName().contains(name)).collect(Collectors.toList());
     }
 
+    public void initUser(Users users){
+        this.users.save(users);
+    }
+
+
+
     public void AddOrEditUser(Users user){
         boolean find = users.findAll().stream().filter(s -> s.getIdUser().equals(user.getIdUser())).findFirst().isPresent();
         if(!find){
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            UserRoles roles = rolesService.getRoleByName("User");
+            UserRoles roles = rolesService.getRoleByName("ROLE_USER");
             user.setRoles(roles);
+            users.save(user);
+        }else {
+            //Change password || edit information users
+            Users getUser = users.findById(user.getIdUser()).get();
+            String password = getUser.getPassword();
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+            boolean isMatch = passwordEncoder.matches(password, user.getPassword());
+            if (!isMatch){
+                getUser.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+            users.save(getUser);
         }
-        users.save(user);
     }
 
     public Users GetUser(String id){
@@ -48,7 +64,7 @@ public class UsersService {
     }
 
     public List<Users> GetUserByDob(Date date){
-        return users.findByDob(date);
+        return users.findAll().stream().filter(s -> s.getDOB().compareTo(date) == 1).collect(Collectors.toList());
     }
 
     public void BannedUser(String id){

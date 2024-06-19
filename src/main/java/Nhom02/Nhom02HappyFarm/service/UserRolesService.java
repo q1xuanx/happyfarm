@@ -1,12 +1,10 @@
 package Nhom02.Nhom02HappyFarm.service;
 
 import Nhom02.Nhom02HappyFarm.entities.UserRoles;
-import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.UserRolesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,14 +27,14 @@ public class UserRolesService {
     }
 
     public UserRoles getRoleByName(String name){
-        List<UserRoles> list = userRoles.findByNameRoles(name);
-        return list.getFirst();
+        return  userRoles.findAll().stream().filter(s-> s.getNameRoles().equals(name)).findFirst().get();
     }
 
     public UserRoles GetUserRole(String id){
         Optional<UserRoles> userRole = userRoles.findById(id);
         return userRole.orElseThrow(() -> new NoSuchElementException("No userRole with " + id + " exits!"));
     }
+
 
     public List<UserRoles> GetUserRoleNotDelete(){
         return userRoles.findByIsDelete(false);

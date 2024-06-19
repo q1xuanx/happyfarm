@@ -104,8 +104,8 @@ public class UserApi {
             @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/findbydob/{dob}")
-    public ResponseEntity<List<Users>> findUserByDOB(@PathVariable(name = "dob") Date date) {
+    @GetMapping("/findbydob/")
+    public ResponseEntity<List<Users>> findUserByDOB(@RequestParam(name = "dob") Date date) {
         List<Users> users = usersService.GetUserByDob(date);
         if(users.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

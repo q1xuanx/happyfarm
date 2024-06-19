@@ -2,6 +2,8 @@ package Nhom02.Nhom02HappyFarm.entities;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +21,19 @@ public class Fertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idFertilizer;
+    @NotNull(message = "Thiếu tên sản phẩm")
+    @NotEmpty(message = "Thiếu tên sản phẩm")
     @Column(name = "NameFertilizer", nullable = false)
     private String nameFertilizer;
+    @NotNull(message = "Thiếu giới thiệu sản phẩm")
+    @NotEmpty(message = "Thiếu giới thiệu sản phẩm")
     @Column(name = "Description", nullable = false)
     private String description;
+    @NotNull(message = "Thiếu giá sản phẩm")
     @Column(name = "Price", nullable = false)
     private float price;
+    @NotNull(message = "Thiếu chi tiết sản phẩm")
+    @NotEmpty(message = "Thiếu chi tiết sản phẩm")
     @Column(name = "Details", nullable = false)
     private String details;
     @Column(name= "ImageRepresent", nullable = false)
@@ -32,6 +41,8 @@ public class Fertilizer {
     @Column(name= "ImageOptional", nullable = false)
     @ElementCollection
     private List<String> imageOptional;
+    @NotNull(message = "Thiếu số lượng sản phẩm")
+    @NotEmpty(message = "Thiếu số lượng sản phẩm")
     @Column(name= "Nums", nullable = false)
     private int nums;
     @Column(name="IsDelete")
@@ -48,9 +59,13 @@ public class Fertilizer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idBrand")
     private Brand brandName;
+    @ManyToMany(mappedBy = "idFertilizer")
+    List<CartItems> listCarts;
     //Image File Save
+    @NotNull(message = "Thiếu ảnh đại diện sản phẩm")
     @Transient
     private MultipartFile fileImageRepresent;
+    @NotNull(message = "Thiếu các ảnh phụ")
     @Transient
     private MultipartFile[] fileImageOptional;
 }
