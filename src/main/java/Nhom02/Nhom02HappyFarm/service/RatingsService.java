@@ -15,23 +15,44 @@ import java.util.NoSuchElementException;
 public class RatingsService {
     private final RatingsRepository ratingsRepository;
 
-    public Ratings getRatingsById(String id) {
-        return ratingsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Not found " + id));
+    public Ratings getRatingsById(String id) throws Exception {
+        try {
+            return ratingsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Not found " + id));
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public List<Ratings> listRatings(){
-        return ratingsRepository.findAll();
+    public List<Ratings> listRatings() throws Exception{
+        try{
+            return ratingsRepository.findAll();
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public void addNewOrEdit(Ratings ratings) {
-        ratingsRepository.save(ratings);
+    public void addNewOrEdit(Ratings ratings) throws Exception {
+        try{
+            ratingsRepository.save(ratings);
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public void deleteRatingsById(String id) {
-        ratingsRepository.deleteById(id);
+    public void deleteRatingsById(String id) throws Exception {
+        try{
+            ratingsRepository.deleteById(id);
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 
-    public List<Ratings> getListByIdFer(String id){
-        return ratingsRepository.findAll().stream().filter(s -> s.getIdFertilizer().getIdFertilizer().equals(id) && s.getIdFertilizer().isDelete()).toList();
+    public List<Ratings> getListByIdFer(String id) throws Exception {
+        try{
+            return ratingsRepository.findAll().stream().filter(s -> s.getIdFertilizer().getIdFertilizer().equals(id) && !s.getIdFertilizer().isDelete()).toList();
+        }catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
     }
 }

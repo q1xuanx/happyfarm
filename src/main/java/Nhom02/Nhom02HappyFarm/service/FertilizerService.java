@@ -24,6 +24,7 @@ public class FertilizerService {
     private final Cloudinary cloudinary;
     private final FertilizerRepository fertilizerRepository;
     private final int sizeOfPage = 10;
+
     public List<Fertilizer> listFertilizer(){
         int getTotalItems = fertilizerRepository.findAll().size();
         Pageable page = PageRequest.of(((getTotalItems + sizeOfPage - 1) / sizeOfPage) - 1 , sizeOfPage);
@@ -45,6 +46,7 @@ public class FertilizerService {
             throw new IOException(e.getMessage());
         }
     }
+
     public Fertilizer GetFertilizer(String id) throws IOException {
         try {
             Optional<Fertilizer> fertilizer = fertilizerRepository.findById(id);
@@ -53,6 +55,7 @@ public class FertilizerService {
             throw new IOException(ex);
         }
     }
+
     public void EditFertilizer(Fertilizer fertilizer) throws ExecutionException {
         try {
             if (fertilizer.getFileImageRepresent() != null) {
@@ -83,6 +86,7 @@ public class FertilizerService {
             throw new ExecutionException(ex);
         }
     }
+
     //Tìm phân bón qua tên
     public List<Fertilizer> findFertilizerByName(String name){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasName(name)).and(FertilizerSpecifiation.isNotDelete());
@@ -90,6 +94,7 @@ public class FertilizerService {
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();
     }
+
     //Lọc các loại phân bón
     public List<Fertilizer> filter(String brand, String origin, String typeFer){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasBrand(brand)).and(FertilizerSpecifiation.hasOrigin(origin)).and(FertilizerSpecifiation.hasType(typeFer)).and(FertilizerSpecifiation.isNotDelete());
@@ -97,6 +102,7 @@ public class FertilizerService {
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();
     }
+
     public List<Fertilizer> filterByType(String typeFer){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasType(typeFer).and(FertilizerSpecifiation.isNotDelete()));
         Pageable page = PageRequest.of( 0, sizeOfPage);
@@ -111,6 +117,7 @@ public class FertilizerService {
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();
     }
+
     //Xử lý đa luồng
     public CompletableFuture<String> uploadImageAsync(MultipartFile file) throws IOException {
         return CompletableFuture.supplyAsync(() ->
@@ -122,6 +129,7 @@ public class FertilizerService {
             }
         });
     }
+
     public String UploadImage(MultipartFile image) throws IOException {
         return cloudinary.uploader().upload(image.getBytes(), Map.of()).get("url").toString();
     }

@@ -1,13 +1,16 @@
 package Nhom02.Nhom02HappyFarm.api.ratings;
 
 
+import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.entities.OriginFertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Ratings;
+import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.service.RatingsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,106 +25,125 @@ import java.util.List;
 @Api(value = "Api xu ly danh gia phan bon")
 public class RatingsApi {
     private final RatingsService ratingsService;
+    private final ResponseHandler responseHandler;
 
+    @GetMapping("/newRate")
     @ApiOperation(value = "Tao moi 1 ratings")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lay thanh cong"),
-            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh tao moi")
     })
-    @GetMapping("/newratings")
-    public ResponseEntity<Ratings> createNew(){
+    public ResponseEntity<Object> createNew(){
         try{
-            return new ResponseEntity<>(new Ratings(), HttpStatus.OK);
+            return ResponseEntity.ok(responseHandler.successResponse("Tao moi thanh cong", new Ratings()));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @GetMapping("/getList")
-    @ApiOperation(value = "Lay danh rating cua cac phan bon danh cho admin quan ly comment")
+    @ApiOperation(value = "Lay list rating cua cac phan bon cho admin quan ly comment")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Lay list thanh cong")
+            @ApiResponse(code = 200, message = "Lay list thanh cong"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")
     })
-    public ResponseEntity<List<Ratings>> getList(){
-        return new ResponseEntity<>(ratingsService.listRatings(), HttpStatus.OK);
+    public ResponseEntity<Object> getList(){
+         try{
+             List<Ratings> ratingsList = ratingsService.listRatings();
+             return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", ratingsList));
+         }catch(Exception e){
+             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+         }
     }
 
-    @GetMapping("/getlist/{idFertizlier}")
-    @ApiOperation(value = "Lay danh sach comment cua cac loai phan bon theo id")
+    @GetMapping("/getListByIdFer/{idFer}")
+    @ApiOperation(value = "Lay danh sach comment cua phan bon theo idFer")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Lay list thanh cong!"), @ApiResponse(code = 400, message = "Loi trong qua trinh lay danh sach")
+            @ApiResponse(code = 200, message = "Lay list thanh cong!"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh lay danh sach"),
+            @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
-    public ResponseEntity<List<Ratings>> getListById(@PathVariable String idFertizlier){
+    public ResponseEntity<Object> getListByIdFer(@PathVariable String idFer){
         try{
-            ratingsService.getRatingsById(idFertizlier);
-            return new ResponseEntity<>(ratingsService.listRatings(), HttpStatus.OK);
-        }catch (Exception ex){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, ex.getMessage());
+            List<Ratings> ratingsList = ratingsService.getListByIdFer(idFer);
+            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", ratingsList));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
-    @GetMapping("/getrate/{id}")
+    @GetMapping("/getRate/{id}")
     @ApiOperation(value = "Lay rating theo id")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Lay thanh cong!"), @ApiResponse(code = 400, message = "Loi trong qua trinh lay ")
+            @ApiResponse(code = 200, message = "Lay thanh cong!"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh lay "),
+            @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
-    public ResponseEntity<Ratings> getRating(@PathVariable String id){
+    public ResponseEntity<Object> getRating(@PathVariable String id){
         try{
             Ratings rate = ratingsService.getRatingsById(id);
-            return new ResponseEntity<>(rate, HttpStatus.OK);
+            if (rate == null) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", rate));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @PostMapping("/addnew")
     @ApiOperation(value = "Them moi 1 ratings")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "them thanh cong"), @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
+            @ApiResponse(code = 201, message = "Them thanh cong"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
     })
-    public ResponseEntity<Ratings> addNewRatings(@RequestBody Ratings ratings){
+    public ResponseEntity<Object> addNewRatings(@Valid @ModelAttribute Ratings ratings){
         try{
             ratingsService.addNewOrEdit(ratings);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @PutMapping("/edit/{id}")
-    @ApiOperation(value = "Chinh sua 1 ratings")
+    @ApiOperation(value = "Chinh sua 1 rating")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Chinh sua thanh cong"), @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
+            @ApiResponse(code = 200, message = "Chinh sua thanh cong"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien"),
+            @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
-    public ResponseEntity<Ratings> editRating(@PathVariable("id") String id, @RequestBody Ratings ratings){
+    public ResponseEntity<Object> editRating(@PathVariable String id,@Valid @RequestBody Ratings ratings){
         try{
             Ratings rate = ratingsService.getRatingsById(id);
-            if (rate != null){
-                ratingsService.addNewOrEdit(ratings);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (rate == null) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
+            ratings.setIdRatings(id);
+            ratingsService.addNewOrEdit(ratings);
+            return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", ratings));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    @ApiOperation(value = "Xoa 1 ratings")
+
+    @ApiOperation(value = "Xoa 1 rating")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Xoa thanh cong"), @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
+            @ApiResponse(code = 200, message = "Xoa thanh cong"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien"),
+            @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Ratings> deleteRating(@PathVariable("id") String id){
+    public ResponseEntity<Object> deleteRating(@PathVariable String id){
         try{
             Ratings rate = ratingsService.getRatingsById(id);
-            if (rate != null){
-                ratingsService.deleteRatingsById(id);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            if (rate == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
+            ratingsService.deleteRatingsById(id);
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Xoa thanh cong"));
         }catch(Exception e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 }
