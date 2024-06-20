@@ -19,4 +19,5 @@ public class VoucherDiscount {
     private String idVoucher;
     private String codeVoucher;
     private int discountPercent;
+    private boolean isDelete;
 }

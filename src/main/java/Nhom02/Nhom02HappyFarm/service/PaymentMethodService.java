@@ -29,8 +29,12 @@ public class PaymentMethodService {
 
     public void DeletePaymentMethod(String id) {
         PaymentMethod getPaymentMethod = paymentMethodRepository.findById(id).get();
-        getPaymentMethod.setDelete(false);
+        getPaymentMethod.setDelete(true);
+        paymentMethodRepository.save(getPaymentMethod);
     }
 
+    public PaymentMethod getPaymentMethod(String id) {
+        return paymentMethodRepository.findById(id).get();
+    }
 
 }

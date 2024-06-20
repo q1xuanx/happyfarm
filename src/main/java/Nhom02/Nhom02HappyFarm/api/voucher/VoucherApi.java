@@ -1,9 +1,10 @@
-package Nhom02.Nhom02HappyFarm.api.payment;
-
+package Nhom02.Nhom02HappyFarm.api.voucher;
 
 import Nhom02.Nhom02HappyFarm.entities.PaymentMethod;
+import Nhom02.Nhom02HappyFarm.entities.VoucherDiscount;
 import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.service.PaymentMethodService;
+import Nhom02.Nhom02HappyFarm.service.VoucherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,80 +14,79 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/paymentmethod")
-@Api(value = "Add new payment method to code")
+@RequestMapping("/api/voucher")
+@Api(value = "Add new voucher")
 @RequiredArgsConstructor
-public class PaymentApi {
-
-    private final PaymentMethodService paymentMethodService;
+public class VoucherApi {
+    private final VoucherService voucherService;
     private final ResponseHandler responseHandler;
 
-    @ApiOperation(value = "Lay list cac loai thanh toan chua delete")
+    @ApiOperation(value = "Lay list cac loai voucher chua delete")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
-    @GetMapping("/getlistpaymentnotdel")
-    public ResponseEntity<Object> getListNotDelPaymentMethod() {
+    @GetMapping("/getlistvouchernotdelete")
+    public ResponseEntity<Object> getListVoucherNotDelete() {
         try{
-            return ResponseEntity.ok(responseHandler.successResponse("Get list success",paymentMethodService.getListNotDeletedPayment()));
+            return ResponseEntity.ok(responseHandler.successResponse("Get list success",voucherService.getListNotDelteVoucher()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    @ApiOperation(value = "Lay tat ca cac loai thanh toan bao gom ca delete")
+    @ApiOperation(value = "Lay tat ca cac loai voucher bao gom ca delete")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
-    @GetMapping("/getlistpayment")
+    @GetMapping("/getallvoucher")
     public ResponseEntity<Object> getListPayment() {
         try{
-            return ResponseEntity.ok(responseHandler.successResponse("Get list success",paymentMethodService.getListPayment()));
+            return ResponseEntity.ok(responseHandler.successResponse("Get list success",voucherService.getListVoucher()));
 
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    @ApiOperation(value = "Khoi tao mot Payment Method moi")
+    @ApiOperation(value = "Khoi tao mot voucher moi")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
     @GetMapping("/addnew")
-    public ResponseEntity<Object> addNewPaymentMethod() {
-        return ResponseEntity.ok(responseHandler.successResponse("Create new", new PaymentMethod()));
+    public ResponseEntity<Object> addNewVoucher() {
+        return ResponseEntity.ok(responseHandler.successResponse("Create new", new VoucherDiscount()));
     }
-    @ApiOperation(value = "Them moi Payment Method")
+    @ApiOperation(value = "Them moi Voucher")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
     @PostMapping("/addnew")
-    public ResponseEntity<Object> addNewPaymentMethod(@RequestBody PaymentMethod paymentMethod) {
+    public ResponseEntity<Object> addNewVoucher(@RequestBody VoucherDiscount voucher) {
         try{
-            if (paymentMethod.getNameMethod().isEmpty()){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name method is empty"));
+            if (voucher.getCodeVoucher().isEmpty()){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Code method is empty"));
             }
-            paymentMethodService.AddOrEditPaymentMethod(paymentMethod);
+            voucherService.AddOrEditPaymentMethod(voucher);
             return ResponseEntity.ok().body(responseHandler.successResponseButNotHaveContent("Tao moi thanh cong"));
         }catch(Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    @ApiOperation(value = "Tim kiem payment theo id")
+    @ApiOperation(value = "Tim kiem voucher theo id")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
-    @GetMapping("/getpayment/{id}")
+    @GetMapping("/getvoucher/{id}")
     public ResponseEntity<Object> getPaymentById(@PathVariable String id) {
         try{
-            PaymentMethod pay = paymentMethodService.getPaymentMethod(id);
-            if (pay == null){
+            VoucherDiscount voucher = voucherService.getVoucher(id);
+            if (voucher == null){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
-            return ResponseEntity.ok().body(responseHandler.successResponse("Lay du lieu thanh cong", pay));
+            return ResponseEntity.ok().body(responseHandler.successResponse("Lay du lieu thanh cong", voucher));
         }catch(Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
@@ -96,19 +96,19 @@ public class PaymentApi {
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
-    @PutMapping("/editpayment")
-    public ResponseEntity<Object> editPayment(@RequestBody PaymentMethod paymentMethod) {
+    @PutMapping("/editvoucher")
+    public ResponseEntity<Object> editVoucher(@RequestBody VoucherDiscount voucher) {
         try{
-            if (paymentMethod.getNameMethod().isEmpty()){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name method is empty"));
+            if (voucher.getCodeVoucher().isEmpty()){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Code method is empty"));
             }
-            paymentMethodService.AddOrEditPaymentMethod(paymentMethod);
-            return ResponseEntity.ok().body(responseHandler.successResponse("Edit thanh cong", paymentMethod));
+            voucherService.AddOrEditPaymentMethod(voucher);
+            return ResponseEntity.ok().body(responseHandler.successResponse("Edit thanh cong", voucher));
         }catch(Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    @ApiOperation(value = "Xoa Payment Method")
+    @ApiOperation(value = "Xoa voucher Method")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
@@ -116,11 +116,11 @@ public class PaymentApi {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> deletePayment(@PathVariable String id) {
         try {
-            PaymentMethod pay = paymentMethodService.getPaymentMethod(id);
-            if (pay == null){
+            VoucherDiscount voucher = voucherService.getVoucher(id);
+            if (voucher == null){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
-            paymentMethodService.DeletePaymentMethod(id);
+            voucherService.DeleteVoucher(id);
             return ResponseEntity.ok().body(responseHandler.successResponseButNotHaveContent("Xoa thanh cong"));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
