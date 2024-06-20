@@ -20,5 +20,5 @@ public class PaymentMethod {
 
     private String nameMethod;
 
-    private String isDelete;
+    private boolean isDelete;
 }

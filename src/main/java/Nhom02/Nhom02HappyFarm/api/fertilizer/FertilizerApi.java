@@ -129,11 +129,11 @@ public class FertilizerApi {
     @ApiOperation(value = "Loc phan bón qua ten thuonng hieu, ten xuat xu, ten loai phan bon")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/filer")
-    public ResponseEntity<List<Fertilizer>> filer(@RequestParam(required = false) String nameBrand, @RequestParam(required = false) String origin, @RequestParam(required = false) String typFer) {
+    public ResponseEntity<Object> filer(@RequestParam(required = false) String nameBrand, @RequestParam(required = false) String origin, @RequestParam(required = false) String typFer) {
         try {
-            return new ResponseEntity<>(fertilizerService.filter(nameBrand, origin, typFer), HttpStatus.OK);
+            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", fertilizerService.filter(nameBrand,origin,typFer)));
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
 
