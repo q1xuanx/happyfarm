@@ -28,7 +28,6 @@ public class UsersService {
     }
 
 
-
     public void AddOrEditUser(Users user){
         boolean find = users.findAll().stream().filter(s -> s.getIdUser().equals(user.getIdUser())).findFirst().isPresent();
         if(!find){

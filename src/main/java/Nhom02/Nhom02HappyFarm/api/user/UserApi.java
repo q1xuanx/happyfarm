@@ -43,12 +43,12 @@ public class UserApi {
             @ApiResponse(code = 404, message = "Co loi xay ra torng qua trinh them user, kiem tra xem co gia tri null hay khong ?")
     })
     @PostMapping("/addnew")
-    public ResponseEntity<Users> createNewUser(@RequestBody Users user) {
+    public ResponseEntity<Object> createNewUser(@ModelAttribute Users user) {
         try{
             usersService.AddOrEditUser(user);
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

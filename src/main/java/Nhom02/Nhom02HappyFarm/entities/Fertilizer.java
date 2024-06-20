@@ -42,7 +42,6 @@ public class Fertilizer {
     @ElementCollection
     private List<String> imageOptional;
     @NotNull(message = "Thiếu số lượng sản phẩm")
-    @NotEmpty(message = "Thiếu số lượng sản phẩm")
     @Column(name= "Nums", nullable = false)
     private int nums;
     @Column(name="IsDelete")
@@ -59,8 +58,6 @@ public class Fertilizer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idBrand")
     private Brand brandName;
-    @ManyToMany(mappedBy = "idFertilizer")
-    List<CartItems> listCarts;
     //Image File Save
     @NotNull(message = "Thiếu ảnh đại diện sản phẩm")
     @Transient

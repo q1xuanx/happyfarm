@@ -97,6 +97,13 @@ public class FertilizerService {
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();
     }
+    public List<Fertilizer> filterByType(String typeFer){
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasType(typeFer).and(FertilizerSpecifiation.isNotDelete()));
+        Pageable page = PageRequest.of( 0, sizeOfPage);
+        Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
+        return paged.getContent();
+    }
+
     //Tìm phân bón chưa delete
     public List<Fertilizer> FertilizerNotDelete(){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
