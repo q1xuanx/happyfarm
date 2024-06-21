@@ -17,14 +17,20 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idUser;
+
     private String username;
+
     private String fullName;
+
     private String email;
+
     @Column(name = "DateOfBirth")
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date dOB;
+    private String dob;
+
     private String password;
+
     private boolean isBanned;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idRoles")
     private UserRoles roles;

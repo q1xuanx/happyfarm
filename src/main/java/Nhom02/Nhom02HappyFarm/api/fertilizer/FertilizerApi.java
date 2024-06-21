@@ -79,6 +79,9 @@ public class FertilizerApi {
     public ResponseEntity<Object> getAllFertilizer() {
         try {
             List<Fertilizer> listFertilizer = fertilizerService.listFertilizer();
+            if (listFertilizer.isEmpty()) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Not found"));
+            }
             return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", listFertilizer));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));

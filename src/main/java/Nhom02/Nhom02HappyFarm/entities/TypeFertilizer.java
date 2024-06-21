@@ -14,7 +14,9 @@ public class TypeFertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idTypeFertilizer;
+
     @Column(name = "nameTypeFertilizer", nullable = false)
     private String nameTypeFertilizer;
+
     private boolean isDelete;
 }

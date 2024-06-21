@@ -35,7 +35,7 @@ public class RatingsApi {
     })
     public ResponseEntity<Object> createNew(){
         try{
-            return ResponseEntity.ok(responseHandler.successResponse("Tao moi thanh cong", new Ratings()));
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponse("Tao moi thanh cong", new Ratings()));
         }catch(Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
@@ -45,11 +45,15 @@ public class RatingsApi {
     @ApiOperation(value = "Lay list rating cua cac phan bon cho admin quan ly comment")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Lay list thanh cong"),
+            @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")
     })
     public ResponseEntity<Object> getList(){
          try{
              List<Ratings> ratingsList = ratingsService.listRatings();
+             if(ratingsList.isEmpty()){
+                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+             }
              return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", ratingsList));
          }catch(Exception e){
              return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
@@ -60,12 +64,16 @@ public class RatingsApi {
     @ApiOperation(value = "Lay danh sach comment cua phan bon theo idFer")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Lay list thanh cong!"),
+            @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 400, message = "Loi trong qua trinh lay danh sach"),
             @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
     public ResponseEntity<Object> getListByIdFer(@PathVariable String idFer){
         try{
             List<Ratings> ratingsList = ratingsService.getListByIdFer(idFer);
+            if (ratingsList.isEmpty()) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
             return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", ratingsList));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
@@ -100,7 +108,7 @@ public class RatingsApi {
     public ResponseEntity<Object> addNewRatings(@Valid @ModelAttribute Ratings ratings){
         try{
             ratingsService.addNewOrEdit(ratings);
-            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch(Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
@@ -113,13 +121,12 @@ public class RatingsApi {
             @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien"),
             @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")
     })
-    public ResponseEntity<Object> editRating(@PathVariable String id,@Valid @RequestBody Ratings ratings){
+    public ResponseEntity<Object> editRating(@PathVariable String id,@Valid @ModelAttribute Ratings ratings){
         try{
             Ratings rate = ratingsService.getRatingsById(id);
             if (rate == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
-            ratings.setIdRatings(id);
             ratingsService.addNewOrEdit(ratings);
             return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", ratings));
         }catch(Exception e){

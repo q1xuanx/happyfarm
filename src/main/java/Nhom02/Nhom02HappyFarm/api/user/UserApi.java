@@ -1,7 +1,10 @@
 package Nhom02.Nhom02HappyFarm.api.user;
 
 
+import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
+import Nhom02.Nhom02HappyFarm.entities.UserRoles;
 import Nhom02.Nhom02HappyFarm.entities.Users;
+import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.service.UsersService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,49 +25,60 @@ import java.util.List;
 @Api(value = "Manage User")
 public class UserApi {
     private final UsersService usersService;
+    private final ResponseHandler responseHandler;
 
     @ApiOperation(value = "Tra ve 1 list user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tim thay gia tri tra ve list"),
             @ApiResponse(code = 204, message = "List rong"),
-            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/getlistusers")
-    public ResponseEntity<List<Users>> getListUsers(@RequestParam(required = false) String nameUser) {
-        if(usersService.GetAllUsers(nameUser).isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/getListUsers")
+    public ResponseEntity<Object> getListUsers(@RequestParam(required = false) String nameUser) {
+        try {
+            List<Users> usersList = usersService.GetAllUsers(nameUser);
+            if (usersList.isEmpty()) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", usersList));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
-        return new ResponseEntity<>(usersService.GetAllUsers(nameUser), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Them moi user")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Them user thanh cong"),
-            @ApiResponse(code = 404, message = "Co loi xay ra torng qua trinh them user, kiem tra xem co gia tri null hay khong ?")
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh them user, kiem tra xem co gia tri null hay khong ?")
     })
-    @PostMapping("/addnew")
-    public ResponseEntity<Object> createNewUser(@ModelAttribute Users user) {
+    @PostMapping("/addNew")
+    public ResponseEntity<Object> createNewUser(@ModelAttribute Users user, @RequestParam(required = false) String nameRoles) {
         try{
-            usersService.AddOrEditUser(user);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            usersService.AddOrEditUser(user, nameRoles);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @ApiOperation(value = "Edit 1 user")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Edit thanh cong"),
-        @ApiResponse(code = 404, message = "Khong tim thay user, co the bi xoa hoac sai id")
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
+            @ApiResponse(code = 404, message = "Khong tim thay user, co the bi xoa hoac sai id")
     })
-    @PutMapping("/edituser/{id}")
-    public ResponseEntity<Users> editUser(@PathVariable(name = "id") String id, @RequestBody Users user) {
-        Users getUser = usersService.GetUser(id);
-        if(getUser == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            usersService.AddOrEditUser(user);
-            return new ResponseEntity<>(HttpStatus.OK);
+    @PutMapping("/editUser/{id}")
+    public ResponseEntity<Object> editUser(@PathVariable(name = "id") String id, @ModelAttribute Users user, @RequestParam(required = false) String nameRoles) {
+        try{
+            Users getUser = usersService.GetUser(id);
+            if(getUser == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            } else {
+                usersService.AddOrEditUser(user, nameRoles);
+                return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", user));
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
@@ -74,13 +88,17 @@ public class UserApi {
             @ApiResponse(code = 204, message = "List rong"),
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/notbanneduser")
-    public ResponseEntity<List<Users>> notBannedUser() {
-        List<Users> users = usersService.GetUserNotBanned();
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/getListUsersNotBanned")
+    public ResponseEntity<Object> notBannedUser() {
+        try {
+            List<Users> users = usersService.GetUserNotBanned();
+            if(users.isEmpty()){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
+                return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Tim kiem ten user do admin nhap")
@@ -89,42 +107,51 @@ public class UserApi {
         @ApiResponse(code = 204, message = "List rong"),
         @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/findbyname/{name}")
-    public ResponseEntity<List<Users>> findUserByName(@PathVariable(name = "name") String name) {
-        List<Users> users = usersService.GetUserByName(name);
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/findByName/{name}")
+    public ResponseEntity<Object> findUserByName(@PathVariable(name = "name") String name) {
+        try {
+            List<Users> users = usersService.GetUserByName(name);
+            if(users.isEmpty()){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Tim kiem ngay sinh user")
+    @ApiOperation(value = "Tim kiem user theo ngay sinh")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tim thay gia tri tra ve"),
             @ApiResponse(code = 204, message = "List rong"),
-            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh tim kiem")
     })
-    @GetMapping("/findbydob/")
-    public ResponseEntity<List<Users>> findUserByDOB(@RequestParam(name = "dob") Date date) {
-        List<Users> users = usersService.GetUserByDob(date);
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @GetMapping("/findByDob")
+    public ResponseEntity<Object> findUserByDob(@RequestParam(name = "dob") String dob) {
+        try {
+            List<Users> users = usersService.GetUserByDob(dob);
+            if (users.isEmpty()) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
-        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @ApiOperation(value = "Banned 1 user")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Banned thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh banned"),
             @ApiResponse(code = 404, message = "Khong tim thay user can tim, co the bi xoa hoac sai id")
     })
-    @DeleteMapping("/banneduser/{id}")
-    public ResponseEntity<List<Users>> bannedUserById(@PathVariable(name = "id") String id){
+    @DeleteMapping("/bannedUser/{id}")
+    public ResponseEntity<Object> bannedUserById(@PathVariable(name = "id") String id){
         try{
             usersService.BannedUser(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Banned thanh cong"));
         } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 }
