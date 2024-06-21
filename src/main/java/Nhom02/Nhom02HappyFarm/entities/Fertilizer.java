@@ -59,10 +59,8 @@ public class Fertilizer {
     @JoinColumn(name = "idBrand")
     private Brand brandName;
     //Image File Save
-    @NotNull(message = "Thiếu ảnh đại diện sản phẩm")
     @Transient
     private MultipartFile fileImageRepresent;
-    @NotNull(message = "Thiếu các ảnh phụ")
     @Transient
     private MultipartFile[] fileImageOptional;
 }

@@ -1,5 +1,7 @@
 package Nhom02.Nhom02HappyFarm.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.ws.rs.DefaultValue;
 import lombok.Data;
@@ -16,26 +18,19 @@ public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idOrders;
-
     private Date orderDate;
-
+    @Nullable
     private Date receiveDate;
-
     private String address;
-
-    @DefaultValue(value = "Đã Đặt")
+    private String phoneNumber;
     private String statusOrders;
-
+    private float totalAmont;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUser")
     private Users idUserOrder;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idVoucher", nullable = true)
     private VoucherDiscount idVoucher;
-    @OneToMany(mappedBy = "idOrders")
-    private List<DetailsOrders> listOrders;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idMethod")
     private PaymentMethod paymentMethod;

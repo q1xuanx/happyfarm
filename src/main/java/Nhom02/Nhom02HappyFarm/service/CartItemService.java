@@ -5,6 +5,7 @@ import Nhom02.Nhom02HappyFarm.entities.CartItems;
 import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.CartItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,5 +81,9 @@ public class CartItemService {
             return cartItemRepository.findAll();
         }
         return cartItemRepository.findAll().stream().filter(s -> s.getUsers().getIdUser().equals(idUser)).toList();
+    }
+    @Transactional
+    public void deleteCart(CartItems cart){
+        cartItemRepository.delete(cart);
     }
 }
