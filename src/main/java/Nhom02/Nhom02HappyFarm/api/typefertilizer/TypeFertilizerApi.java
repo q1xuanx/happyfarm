@@ -49,6 +49,8 @@ public class TypeFertilizerApi {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    // update
     @ApiOperation(value = "Edit 1 loai phan bón")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Edit thành công"),
@@ -64,6 +66,9 @@ public class TypeFertilizerApi {
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
+
+
+
     @ApiOperation(value = "Tra ve 1 list cac xuat voi cac loai phan bon chua bi xoa (Isdelete = false)")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve list"),

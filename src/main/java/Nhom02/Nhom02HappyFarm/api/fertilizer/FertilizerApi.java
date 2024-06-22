@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080") // Cấu hình CORS cho domain React chạy trên localhost:3000
 @RequestMapping("/api/fertilizer")
 @Api(value = "Quản lý và lọc các loại phân bón")
 @RequiredArgsConstructor
@@ -95,8 +96,7 @@ public class FertilizerApi {
     }
 
     @ApiOperation(value = "Chinh sua phan bón")
-    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
-            @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")})
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"), @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")})
     @PutMapping("/editfertilizer/{id}")
     public ResponseEntity<Object> EditFertilizer(@PathVariable String id, @Valid @RequestBody Fertilizer fertilizer) {
         try {
@@ -126,6 +126,8 @@ public class FertilizerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
+
+
     @ApiOperation(value = "Loc phan bón qua ten thuonng hieu, ten xuat xu, ten loai phan bon")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/filer")
