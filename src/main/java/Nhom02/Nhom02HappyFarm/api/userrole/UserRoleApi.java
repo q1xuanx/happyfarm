@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/userrole")
 @RequiredArgsConstructor
 @Api(value = "Manage UserRole")

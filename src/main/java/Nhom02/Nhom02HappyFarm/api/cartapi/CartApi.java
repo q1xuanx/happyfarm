@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @Api(value = "Add items to buy for users")
 public class CartApi {
     private final FertilizerService fertilizerService;

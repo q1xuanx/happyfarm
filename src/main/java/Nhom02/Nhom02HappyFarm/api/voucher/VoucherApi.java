@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/voucher")
 @Api(value = "Add new voucher")
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class VoucherApi {
     private final VoucherService voucherService;

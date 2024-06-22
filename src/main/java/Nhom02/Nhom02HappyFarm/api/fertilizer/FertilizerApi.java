@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/fertilizer")
 @Api(value = "Quản lý và lọc các loại phân bón")

@@ -19,7 +19,7 @@ import java.util.List;
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
 @Api(value = "Api xu ly danh gia phan bon")
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 public class RatingsApi {
     private final RatingsService ratingsService;
 

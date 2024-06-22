@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 @Api(value = "Xu ly orders")
 @RequiredArgsConstructor
 @RequestMapping("/api/checkout")
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 public class CheckOutApi {
     private final OrdersService ordersService;
     private final CartItemService cartItemService;

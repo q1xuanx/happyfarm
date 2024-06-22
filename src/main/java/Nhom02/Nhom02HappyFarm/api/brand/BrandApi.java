@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/brand")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "")
+@CrossOrigin(origins = "*")
 @Api(value = "Manage Brand Of Fertilizer")
 public class BrandApi {
     private final BrandService brandService;
