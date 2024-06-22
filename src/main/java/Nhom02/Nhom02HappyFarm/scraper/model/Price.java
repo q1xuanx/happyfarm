@@ -6,8 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Price {
-
     private String market;
-    private double price;
-    private double change;
+    private String price;
+    private String change;
 }
