@@ -1,7 +1,6 @@
 package Nhom02.Nhom02HappyFarm.api.ratings;
 
 
-import Nhom02.Nhom02HappyFarm.entities.OriginFertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Ratings;
 import Nhom02.Nhom02HappyFarm.service.RatingsService;
 import io.swagger.annotations.Api;
@@ -20,6 +19,7 @@ import java.util.List;
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
 @Api(value = "Api xu ly danh gia phan bon")
+@CrossOrigin(origins = "")
 public class RatingsApi {
     private final RatingsService ratingsService;
 

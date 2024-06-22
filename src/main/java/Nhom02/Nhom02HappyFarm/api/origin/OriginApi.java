@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "")
 @RequestMapping("/api/origin")
 @RequiredArgsConstructor
 @Api(value = "Manage Xuat Xu")

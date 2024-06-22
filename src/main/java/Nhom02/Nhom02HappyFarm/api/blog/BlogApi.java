@@ -17,6 +17,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/blog")
 @Api(value = "Api blog")
+@CrossOrigin(origins = "")
 public class BlogApi {
     private final BlogService blogService;
     private final ResponseHandler responseHandler;
