@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/paymentmethod")
 @Api(value = "Add new payment method to code")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class PaymentApi {
 

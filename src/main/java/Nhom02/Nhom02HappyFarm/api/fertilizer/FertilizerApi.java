@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
-
+@CrossOrigin(origins = "*")
 @RestController
 @CrossOrigin(origins = "http://localhost:8080") // Cấu hình CORS cho domain React chạy trên localhost:3000
 @RequestMapping("/api/fertilizer")
