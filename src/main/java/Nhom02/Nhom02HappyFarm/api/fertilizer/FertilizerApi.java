@@ -60,7 +60,8 @@ public class FertilizerApi {
 
     @PostMapping("/addnew")
     @ApiOperation(value = "Thêm mới 1 phan bón")
-    @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình thêm mới")})
+    @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình thêm mới")})
     public ResponseEntity<Object> createNewFertilizer(@Valid @ModelAttribute Fertilizer fertilizer) throws IOException {
         try {
             fertilizerService.addNew(fertilizer);
@@ -71,11 +72,16 @@ public class FertilizerApi {
     }
 
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = 1 và 0")
-    @ApiResponses({@ApiResponse(code = 201, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
     @GetMapping("/listallfer")
     public ResponseEntity<Object> getAllFertilizer() {
         try {
             List<Fertilizer> listFertilizer = fertilizerService.listFertilizer();
+            if (listFertilizer.isEmpty()) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Not found"));
+            }
             return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", listFertilizer));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
@@ -83,7 +89,7 @@ public class FertilizerApi {
     }
 
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = false")
-    @ApiResponses({@ApiResponse(code = 201, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
     @GetMapping("/listfer")
     public ResponseEntity<Object> getAllFerNotDell() {
         try {
@@ -95,7 +101,9 @@ public class FertilizerApi {
     }
 
     @ApiOperation(value = "Chinh sua phan bón")
-    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
             @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")})
     @PutMapping("/editfertilizer/{id}")
     public ResponseEntity<Object> EditFertilizer(@PathVariable String id, @Valid @RequestBody Fertilizer fertilizer) {

@@ -24,7 +24,7 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final UsersService usersService;
     private final FertilizerService fertilizerService;
-    public int addNewItem(String idItems, int quantity, String idUser) throws IOException {
+    public int addNewItem(String idItems, int quantity, String idUser) throws Exception {
         List<CartItems> itemUserHave = cartItemRepository.findAll().stream().filter(s-> s.getUsers().getIdUser().equals(idUser)).collect(Collectors.toList());
         for (CartItems ca : itemUserHave){
             log.info(ca.getIdFertilizer().getIdFertilizer());
