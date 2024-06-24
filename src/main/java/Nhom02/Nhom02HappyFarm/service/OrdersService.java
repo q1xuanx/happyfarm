@@ -4,12 +4,15 @@ import Nhom02.Nhom02HappyFarm.config.VnpayConfig;
 import Nhom02.Nhom02HappyFarm.entities.CartItems;
 import Nhom02.Nhom02HappyFarm.entities.DetailsOrders;
 import Nhom02.Nhom02HappyFarm.entities.Orders;
-import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.OrdersRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Order;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import java.util.HashMap;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -17,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 
@@ -31,9 +33,13 @@ public class OrdersService {
     private final float discount_for_htx = 0.5F;
     private final float discount_for_agency = 0.4F;
     private final float discount_for_farmer = 0.3F;
+    private final JavaMailSender mailSender;
     //Role Hop tac xa giam 5%, role dai ly 4%, nhan vuon 3%
     public List<Orders> getAll(){
         return ordersRepository.findAll();
+    }
+    public Orders getOrders(String idOrder){
+        return ordersRepository.findById(idOrder).get();
     }
     public void addNewOrder(Orders order, List<CartItems> cartItems) throws ExecutionException {
         LocalDate getCurrentDate = LocalDate.now();
@@ -73,7 +79,7 @@ public class OrdersService {
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + orders.getIdOrders());
+        vnp_Params.put("vnp_OrderInfo", orders.getIdOrders());
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_ReturnUrl", VnpayConfig.vnp_ReturnUrl);
@@ -83,12 +89,9 @@ public class OrdersService {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnp_CreateDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-
         cld.add(Calendar.MINUTE, 15);
         String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-
         List fieldNames = new ArrayList(vnp_Params.keySet());
         Collections.sort(fieldNames);
         StringBuilder hashData = new StringBuilder();
@@ -123,5 +126,20 @@ public class OrdersService {
     public List<DetailsOrders> getDetailsOrder(String idOrder){
         return detailsOrderService.getByIdOrder(idOrder);
     }
-
+    public void sendEmail(String emailSend, List<DetailsOrders> detailsOrders) {
+        Map<Object, String> response = new HashMap<Object, String>();
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("happyfarm.cskh.vn@gmail.com");
+        message.setTo(emailSend);
+        message.setSubject("[Happy Farm] Cảm ơn bạn");
+        StringBuilder emailContent = new StringBuilder();
+        emailContent.append("Danh sách các sản phẩm:\n");
+        for (DetailsOrders detailsOrder : detailsOrders) {
+            emailContent.append("Sản phẩm: ").append(detailsOrder.getIdFertilizer().getNameFertilizer())
+                    .append(", Số lượng: ").append(detailsOrder.getQuantity())
+                    .append("\n");
+        }
+        message.setText(emailContent.toString());
+        mailSender.send(message);
+    }
 }
