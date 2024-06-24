@@ -1,8 +1,7 @@
 package Nhom02.Nhom02HappyFarm.api.ratings;
 
 
-import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
-import Nhom02.Nhom02HappyFarm.entities.OriginFertilizer;
+
 import Nhom02.Nhom02HappyFarm.entities.Ratings;
 import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.service.RatingsService;
@@ -15,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 
@@ -23,6 +22,7 @@ import java.util.List;
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
 @Api(value = "Api xu ly danh gia phan bon")
+@CrossOrigin(origins = "*")
 public class RatingsApi {
     private final RatingsService ratingsService;
     private final ResponseHandler responseHandler;
