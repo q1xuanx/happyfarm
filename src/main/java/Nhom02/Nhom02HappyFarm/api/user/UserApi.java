@@ -11,12 +11,15 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -41,9 +44,24 @@ public class UserApi {
                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
             }
             return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", usersList));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
+    }
+
+    @ApiOperation(value = "Dang nhap")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Dang nhap thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh dang nhap")
+    })
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestParam String username, @RequestParam String password) {
+        Optional<Users> getUser = usersService.login(username, password);
+        if (getUser.isPresent()) {
+            Users user = getUser.get();
+            return ResponseEntity.ok(responseHandler.successResponse("Đăng nhập thành công", user));
+        }
+        return ResponseEntity.badRequest().body(responseHandler.failResponse("Tài khoản hoặc mật khẩu không tồn tại"));
     }
 
     @ApiOperation(value = "Them moi user")
@@ -53,31 +71,31 @@ public class UserApi {
     })
     @PostMapping("/addNew")
     public ResponseEntity<Object> createNewUser(@ModelAttribute Users user, @RequestParam(required = false) String nameRoles) {
-        try{
+        try {
             usersService.AddOrEditUser(user, nameRoles);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @ApiOperation(value = "Edit 1 user")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Edit thanh cong"),
+            @ApiResponse(code = 200, message = "Edit thanh cong"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
             @ApiResponse(code = 404, message = "Khong tim thay user, co the bi xoa hoac sai id")
     })
     @PutMapping("/editUser/{id}")
     public ResponseEntity<Object> editUser(@PathVariable(name = "id") String id, @ModelAttribute Users user, @RequestParam(required = false) String nameRoles) {
-        try{
+        try {
             Users getUser = usersService.GetUser(id);
-            if(getUser == null){
+            if (getUser == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             } else {
                 usersService.AddOrEditUser(user, nameRoles);
                 return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", user));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
@@ -92,30 +110,30 @@ public class UserApi {
     public ResponseEntity<Object> notBannedUser() {
         try {
             List<Users> users = usersService.GetUserNotBanned();
-            if(users.isEmpty()){
+            if (users.isEmpty()) {
                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
             }
-                return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
-        }catch (Exception e){
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
 
     @ApiOperation(value = "Tim kiem ten user do admin nhap")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Tim thay gia tri tra ve"),
-        @ApiResponse(code = 204, message = "List rong"),
-        @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+            @ApiResponse(code = 200, message = "Tim thay gia tri tra ve"),
+            @ApiResponse(code = 204, message = "List rong"),
+            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
     @GetMapping("/findByName/{name}")
     public ResponseEntity<Object> findUserByName(@PathVariable(name = "name") String name) {
         try {
             List<Users> users = usersService.GetUserByName(name);
-            if(users.isEmpty()){
+            if (users.isEmpty()) {
                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
             }
             return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", users));
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
@@ -146,11 +164,11 @@ public class UserApi {
             @ApiResponse(code = 404, message = "Khong tim thay user can tim, co the bi xoa hoac sai id")
     })
     @DeleteMapping("/bannedUser/{id}")
-    public ResponseEntity<Object> bannedUserById(@PathVariable(name = "id") String id){
-        try{
+    public ResponseEntity<Object> bannedUserById(@PathVariable(name = "id") String id) {
+        try {
             usersService.BannedUser(id);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Banned thanh cong"));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
