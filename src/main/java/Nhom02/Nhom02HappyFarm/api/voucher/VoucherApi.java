@@ -127,4 +127,22 @@ public class VoucherApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
+
+    @ApiOperation(value = "Xoa voucher Method")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
+    })
+    @GetMapping("/checkvalid")
+    public ResponseEntity<Object> checkcode(@RequestParam String code){
+        try{
+            if (voucherService.isValid(code)){
+                return ResponseEntity.ok(responseHandler.successResponse(" Thành công", voucherService.getVoucherByName(code)));
+            }else {
+                return ResponseEntity.ok(responseHandler.failResponse("Voucher không tồn tại"));
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
 }

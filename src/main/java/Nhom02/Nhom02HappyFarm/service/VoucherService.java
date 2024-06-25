@@ -34,4 +34,10 @@ public class VoucherService {
     public VoucherDiscount getVoucher(String id) {
         return voucherRepository.findById(id).get();
     }
+    public boolean isValid (String nameVoucher){
+        return voucherRepository.findAll().stream().filter(s -> s.getCodeVoucher().equals(nameVoucher) && !s.isDelete()).findFirst().isPresent();
+    }
+    public VoucherDiscount getVoucherByName(String nameVoucher){
+        return voucherRepository.findAll().stream().filter(s -> s.getCodeVoucher().equals(nameVoucher)).findFirst().get();
+    }
 }

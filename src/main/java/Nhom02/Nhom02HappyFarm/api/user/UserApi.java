@@ -55,7 +55,7 @@ public class UserApi {
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh dang nhap")
     })
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestParam String username, @RequestParam String password) {
+    public ResponseEntity<Object> login( @RequestParam String username,  @RequestParam String password) {
         Optional<Users> getUser = usersService.login(username, password);
         if (getUser.isPresent()) {
             Users user = getUser.get();

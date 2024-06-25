@@ -29,6 +29,7 @@ public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final CartItemService cartItemService;
     private final DetailsOrderService detailsOrderService;
+    private final VoucherService voucherService;
     private final UsersService usersService;
     private final float discount_for_htx = 0.5F;
     private final float discount_for_agency = 0.4F;
