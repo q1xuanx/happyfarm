@@ -62,7 +62,7 @@ public class FertilizerApi {
     @ApiOperation(value = "Thêm mới 1 phan bón")
     @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình thêm mới")})
-    public ResponseEntity<Object> createNewFertilizer(@ModelAttribute Fertilizer fertilizer) throws IOException {
+    public ResponseEntity<Object> createNewFertilizer(@Valid @ModelAttribute Fertilizer fertilizer) throws IOException {
         try {
             fertilizerService.addNew(fertilizer);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));

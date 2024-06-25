@@ -3,8 +3,6 @@ package Nhom02.Nhom02HappyFarm.entities;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
-
-
 import java.sql.Date;
 
 @Data

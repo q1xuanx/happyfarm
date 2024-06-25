@@ -1,17 +1,11 @@
 package Nhom02.Nhom02HappyFarm.entities;
-
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import org.springframework.web.multipart.MultipartFile;
 import java.sql.Date;
-
 @Entity
 @Data
 @Getter
@@ -21,7 +15,8 @@ public class Banner {
     @Id
     private String id;
     private String imageFile;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date expireDate;
+    private String expireDate;
     private String url;
+    @Transient
+    private MultipartFile image;
 }
