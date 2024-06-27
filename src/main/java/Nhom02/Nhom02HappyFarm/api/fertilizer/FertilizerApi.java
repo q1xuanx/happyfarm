@@ -3,10 +3,13 @@ package Nhom02.Nhom02HappyFarm.api.fertilizer;
 
 import Nhom02.Nhom02HappyFarm.entities.Blog;
 import Nhom02.Nhom02HappyFarm.entities.Brand;
+import Nhom02.Nhom02HappyFarm.entities.DetailsOrders;
 import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
+import Nhom02.Nhom02HappyFarm.service.DetailsOrderService;
 import Nhom02.Nhom02HappyFarm.service.FertilizerService;
 import io.swagger.annotations.*;
+import io.swagger.models.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +19,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/fertilizer")
@@ -25,7 +32,7 @@ import java.util.List;
 public class FertilizerApi {
     private final FertilizerService fertilizerService;
     private final ResponseHandler responseHandler;
-
+    private final DetailsOrderService detailsOrderService;
     @ApiOperation(value = "Tao moi 1 fertilizer")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lay thanh cong"),
@@ -155,7 +162,6 @@ public class FertilizerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
-
     @ApiOperation(value = "Tim phan bón qua ten")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/findbyname")
@@ -163,6 +169,62 @@ public class FertilizerApi {
         try {
             return ResponseEntity.ok(responseHandler.successResponse("Find Success",fertilizerService.findFertilizerByName(name)));
         } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Loc phan bon theo gia")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/fillbyprice")
+    public ResponseEntity<Object> fillByPrice(@RequestParam int price) {
+        try {
+            List<Fertilizer> list = fertilizerService.FertilizerNotDelete().stream().filter(s -> s.getPrice() <= price).toList();
+            return ResponseEntity.ok(responseHandler.successResponse("Find Success", list));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Lay ra list phan bon ban nhieu nhat")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/mostbuy")
+    public ResponseEntity<Object> mostBuyFertilizer(){
+        try{
+            Map<Fertilizer, Integer> countMostBuy = detailsOrderService.getAll().stream().collect(Collectors.groupingBy(DetailsOrders::getIdFertilizer, Collectors.summingInt(DetailsOrders::getQuantity)));
+            List<Fertilizer> list = countMostBuy.entrySet().stream().sorted((q1, q2) -> q2.getValue().compareTo(q1.getValue())).limit(3).map(Map.Entry::getKey).toList();
+            return ResponseEntity.ok(responseHandler.successResponse("Most Buy", list));
+        }catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Lay ra list phan bon ban nhieu nhat")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/recentadd")
+    public ResponseEntity<Object> recentAdded(){
+        try{
+            List<Fertilizer> list = fertilizerService.FertilizerNotDelete().stream().toList().reversed().stream().limit(3).toList();
+            return ResponseEntity.ok(responseHandler.successResponse("Recent added", list));
+        }catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Lay ra list phan bon ban nhieu nhat")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/cheaper")
+    public ResponseEntity<Object> getCheapPrice(){
+        try{
+            List<Fertilizer> list = fertilizerService.FertilizerNotDelete().stream().toList().stream().sorted((e1, e2) -> Float.compare(e1.getPrice(), e2.getPrice())).limit(3).toList();
+            return ResponseEntity.ok(responseHandler.successResponse("Cheap fertilizer", list));
+        }catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Lay ra list phan bon ban nhieu nhat")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/expensive")
+    public ResponseEntity<Object> getExpensiveFer(){
+        try{
+            List<Fertilizer> list = fertilizerService.FertilizerNotDelete().stream().toList().stream().sorted((e1, e2) -> Float.compare(e1.getPrice(), e2.getPrice())).toList().reversed().stream().limit(3).toList();
+            return ResponseEntity.ok(responseHandler.successResponse("Expensive fertilizer", list));
+        }catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }

@@ -42,5 +42,7 @@ public class DetailsOrderService {
         fertilizer.setNums(fertilizer.getNums() - quantity);
         fertilizerRepository.save(fertilizer);
     }
-
+    public List<DetailsOrders> getAll(){
+        return detailsOrdersRepository.findAll();
+    }
 }
