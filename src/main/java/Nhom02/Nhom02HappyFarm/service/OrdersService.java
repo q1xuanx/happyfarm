@@ -61,7 +61,7 @@ public class OrdersService {
             total *= discount_for_farmer;
         }
         if (order.getIdVoucher() != null){
-            total *= ((float) order.getIdVoucher().getDiscountPercent() / 100);
+            total -= (total * (((float) order.getIdVoucher().getDiscountPercent() / 100)));
         }
         order.setTotalAmont(total);
         ordersRepository.save(order);
