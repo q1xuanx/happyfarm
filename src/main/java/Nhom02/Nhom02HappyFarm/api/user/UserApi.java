@@ -61,7 +61,7 @@ public class UserApi {
             Users user = getUser.get();
             return ResponseEntity.ok(responseHandler.successResponse("Đăng nhập thành công", user));
         }
-        return ResponseEntity.badRequest().body(responseHandler.failResponse("Tài khoản hoặc mật khẩu không tồn tại"));
+        return ResponseEntity.badRequest().body(responseHandler.failResponse("Tài khoản hoặc mật khẩu không tồn tại hoặc tài khoản đã bị khóa"));
     }
 
     @ApiOperation(value = "Them moi user")

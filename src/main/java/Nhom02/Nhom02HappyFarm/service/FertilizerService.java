@@ -47,6 +47,10 @@ public class FertilizerService {
         }
     }
 
+    public List<Fertilizer> findByType(String nameType){
+        return fertilizerRepository.findAll().stream().filter(s -> s.getType().getNameTypeFertilizer().equals(nameType)).collect(Collectors.toList());
+    }
+
     public Fertilizer GetFertilizer(String id) throws IOException {
         try {
             Optional<Fertilizer> fertilizer = fertilizerRepository.findById(id);
@@ -113,6 +117,13 @@ public class FertilizerService {
     //Tìm phân bón chưa delete
     public List<Fertilizer> FertilizerNotDelete(){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
+        Pageable page = PageRequest.of(0 , sizeOfPage);
+        Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
+        return paged.getContent();
+    }
+
+    public List<Fertilizer> FertilizerDel(){
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isDelete());
         Pageable page = PageRequest.of(0 , sizeOfPage);
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();

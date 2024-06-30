@@ -107,6 +107,18 @@ public class FertilizerApi {
         }
     }
 
+    @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = true")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @GetMapping("/listferdel")
+    public ResponseEntity<Object> getAllFertilizerDel() {
+        try {
+            List<Fertilizer> listFertilizer = fertilizerService.FertilizerDel();
+            return ResponseEntity.ok(responseHandler.successResponse("Get list thanh cong", listFertilizer));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @ApiOperation(value = "Chinh sua phan bón")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thành công"),
@@ -151,6 +163,18 @@ public class FertilizerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
+
+    @ApiOperation(value = "Tim theo loai phan bon")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/findbytype")
+    public ResponseEntity<Object> getFertilizerByType(@RequestParam String nameType) {
+        try {
+            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", fertilizerService.filterByType(nameType)));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+
 
     @ApiOperation(value = "Loc phan bón qua ten ten loai phan bon")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
@@ -228,4 +252,5 @@ public class FertilizerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
+
 }

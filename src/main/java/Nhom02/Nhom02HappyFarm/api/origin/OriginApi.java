@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -123,7 +124,7 @@ public class OriginApi {
             originService.DeleteOriginFertilizer(idOrigin);
             return ResponseEntity.ok(responseHandler.successResponse("Origin is deleted", idOrigin));
         } catch (Exception error) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(error.getMessage()));
         }
     }
 
@@ -155,5 +156,37 @@ public class OriginApi {
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
         }
         return ResponseEntity.ok(responseHandler.successResponse("Get list thanh cong", listOrigin));
+    }
+
+    @ApiOperation(value = "Tra ve 1 list cac xuat xu voi IsDelete = true (Tuc trong thung rac)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve list"),
+            @ApiResponse(code = 204, message = "List rong"),
+            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+    })
+    @GetMapping("/listdel")
+    public ResponseEntity<Object> listDel() {
+        List<OriginFertilizer> listOrigin = originService.GetAllOriginDelete();
+        if (listOrigin.isEmpty()) {
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+        }
+        return ResponseEntity.ok(responseHandler.successResponse("Get list thanh cong", listOrigin));
+    }
+
+    @ApiOperation(value = "Xóa ra khỏi Database")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Tim thấy và da xoa"),
+            @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
+    })
+    @DeleteMapping("/confirmDelete")
+    public ResponseEntity<Object> confirmDelete(@RequestParam String id){
+        try {
+            if (originService.confirmDelete(id) == 1) {
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Đã xóa "));
+            }
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Có lỗi, chưa tạo origin hoặc không có id cần xóa"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
     }
 }

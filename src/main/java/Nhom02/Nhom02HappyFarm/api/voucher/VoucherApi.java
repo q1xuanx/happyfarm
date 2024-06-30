@@ -1,9 +1,7 @@
 package Nhom02.Nhom02HappyFarm.api.voucher;
 
-import Nhom02.Nhom02HappyFarm.entities.PaymentMethod;
 import Nhom02.Nhom02HappyFarm.entities.VoucherDiscount;
 import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
-import Nhom02.Nhom02HappyFarm.service.PaymentMethodService;
 import Nhom02.Nhom02HappyFarm.service.VoucherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,7 +10,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+//Không có
 @RestController
 @RequestMapping("/api/voucher")
 @Api(value = "Add new voucher")
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 public class VoucherApi {
     private final VoucherService voucherService;
     private final ResponseHandler responseHandler;
-
     @ApiOperation(value = "Lay list cac loai voucher chua delete")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
@@ -41,10 +38,22 @@ public class VoucherApi {
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
     @GetMapping("/getallvoucher")
-    public ResponseEntity<Object> getListPayment() {
+    public ResponseEntity<Object> getListVoucher() {
         try{
             return ResponseEntity.ok(responseHandler.successResponse("Get list success",voucherService.getListVoucher()));
-
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Lay tat ca cac loai voucher con thoi han su dung")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
+    })
+    @GetMapping("/getvouchervalid")
+    public ResponseEntity<Object> getListVoucherValid(){
+        try{
+            return ResponseEntity.ok(responseHandler.successResponse("Get list valid success", voucherService.getListVoucherNotExp()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
@@ -92,6 +101,7 @@ public class VoucherApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
+    //K
     @ApiOperation(value = "Chinh sua payment method")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
@@ -128,7 +138,7 @@ public class VoucherApi {
         }
     }
 
-    @ApiOperation(value = "Xoa voucher Method")
+    @ApiOperation(value = "Check voucher co ton tai hay khong")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")

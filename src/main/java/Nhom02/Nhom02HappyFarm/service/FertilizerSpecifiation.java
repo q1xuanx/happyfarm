@@ -27,4 +27,7 @@ public class FertilizerSpecifiation{
     public static Specification<Fertilizer> isNotDelete(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDelete"), false);
     }
+    public static Specification<Fertilizer> isDelete(){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDelete"), true);
+    }
 }

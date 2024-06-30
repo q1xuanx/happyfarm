@@ -6,6 +6,7 @@ import Nhom02.Nhom02HappyFarm.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -39,5 +40,12 @@ public class VoucherService {
     }
     public VoucherDiscount getVoucherByName(String nameVoucher){
         return voucherRepository.findAll().stream().filter(s -> s.getCodeVoucher().equals(nameVoucher)).findFirst().get();
+    }
+    public boolean isNotExp (String startDate, String endDate){
+        LocalDate now = LocalDate.now();
+        return LocalDate.parse(startDate).isAfter(now) && LocalDate.parse(endDate).isBefore(now);
+    }
+    public List<VoucherDiscount> getListVoucherNotExp(){
+        return voucherRepository.findAll().stream().filter(s -> isNotExp(s.getStartDate(), s.getEndDate())).toList();
     }
 }
