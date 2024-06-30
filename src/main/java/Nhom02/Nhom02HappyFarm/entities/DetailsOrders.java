@@ -10,9 +10,9 @@ public class DetailsOrders {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idDetailsOrders;
     private int quantity;
-    @JoinColumn(name="idFertilizer")
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Fertilizer idFertilizer;
+    private String nameFertilizer;
+    private float priceFertilizer;
+    private String donViTinh;
     @JoinColumn(name = "idOrder")
     @ManyToOne(fetch = FetchType.EAGER)
     private Orders idOrders;

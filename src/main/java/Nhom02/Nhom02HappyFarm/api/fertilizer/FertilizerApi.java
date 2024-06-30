@@ -65,12 +65,17 @@ public class FertilizerApi {
         }
     }
 
+
+
     @PostMapping("/addnew")
     @ApiOperation(value = "Thêm mới 1 phan bón")
     @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình thêm mới")})
     public ResponseEntity<Object> createNewFertilizer(@Valid @ModelAttribute Fertilizer fertilizer) throws IOException {
         try {
+            if (fertilizerService.checkName(fertilizer.getNameFertilizer())){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Tên đã bị trùng"));
+            }
             fertilizerService.addNew(fertilizer);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         } catch (Exception e) {
@@ -207,13 +212,32 @@ public class FertilizerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
+
+    @ApiOperation(value = "Delete phan bon ra khoi database")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @DeleteMapping("/confirmdel")
+    public ResponseEntity<Object> deleteOutDatabase(@RequestParam String id) {
+        try {
+            if(fertilizerService.deleteFertilizerOut(id) == 1){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Đã xóa thành công"));
+            }
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Có lỗi trong qua trinh xóa"));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+
     @ApiOperation(value = "Lay ra list phan bon ban nhieu nhat")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/mostbuy")
     public ResponseEntity<Object> mostBuyFertilizer(){
         try{
-            Map<Fertilizer, Integer> countMostBuy = detailsOrderService.getAll().stream().collect(Collectors.groupingBy(DetailsOrders::getIdFertilizer, Collectors.summingInt(DetailsOrders::getQuantity)));
-            List<Fertilizer> list = countMostBuy.entrySet().stream().sorted((q1, q2) -> q2.getValue().compareTo(q1.getValue())).limit(3).map(Map.Entry::getKey).toList();
+            Map<String, Integer> countMostBuy = detailsOrderService.getAll().stream().collect(Collectors.groupingBy(DetailsOrders::getNameFertilizer, Collectors.summingInt(DetailsOrders::getQuantity)));
+            List<String> comPareQuantity = countMostBuy.entrySet().stream().sorted((q1, q2) -> q2.getValue().compareTo(q1.getValue())).limit(3).map(Map.Entry::getKey).toList();
+            List<Fertilizer> list = new ArrayList<>();
+            for (String s : comPareQuantity){
+                list.add(fertilizerService.findExacfertilizer(s));
+            }
             return ResponseEntity.ok(responseHandler.successResponse("Most Buy", list));
         }catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));

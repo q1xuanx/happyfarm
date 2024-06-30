@@ -77,8 +77,6 @@ public class BrandApi {
         }
     }
 
-
-
     @ApiOperation(value = "Lay 1 brand bang id")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Lay thanh cong"),
@@ -141,10 +139,35 @@ public class BrandApi {
     })
     @GetMapping("/notdeletebrand")
     public ResponseEntity<Object> brandIsNotDelete(){
-        List<Brand> listBrand = brandService.GetAllOriginNotDelete();
+        List<Brand> listBrand = brandService.GetAllBrandNotDelete();
         if (listBrand.isEmpty()){
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
         }
         return ResponseEntity.ok(responseHandler.successResponse("Success get list", listBrand));
+    }
+    @ApiOperation(value = "Trả về các brand với IsDelete = true (Trả ve cac brand da xóa)")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Thành công"),
+    })
+    @GetMapping("/deletebrand")
+    public ResponseEntity<Object> brandIsDelete(){
+        List<Brand> listBrand = brandService.GetAllBrandDelete();
+        return ResponseEntity.ok(responseHandler.successResponse("Success get list", listBrand));
+    }
+    @ApiOperation(value = "Xac nhan xoa 1 brand theo id")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Xay ra loi khi xoa"),
+    })
+    @DeleteMapping("/confirmdelete")
+    public ResponseEntity<Object> confirmmDelete(@RequestParam String id){
+        try{
+            if (brandService.ConfirmDelete(id) == 1){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Đã xoa thanh cong"));
+            }
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Error !"));
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
     }
 }

@@ -101,7 +101,7 @@ public class VoucherApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
-    //K
+
     @ApiOperation(value = "Chinh sua payment method")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),

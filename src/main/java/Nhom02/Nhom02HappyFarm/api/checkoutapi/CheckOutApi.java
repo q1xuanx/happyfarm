@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -59,7 +60,7 @@ public class CheckOutApi {
             @ApiResponse(code = 400, message = "Co loi trong qua trinh request")
     })
     @GetMapping("/info_payment")
-    public ResponseEntity<Object> responsePayment(@RequestParam String vnp_Amount, @RequestParam String vnp_BankCode, @RequestParam String vnp_OrderInfo, @RequestParam String vnp_ResponseCode, HttpSession httpSession){
+    public ResponseEntity<Object> responsePayment(@RequestParam String vnp_Amount, @RequestParam String vnp_BankCode, @RequestParam String vnp_OrderInfo, @RequestParam String vnp_ResponseCode, HttpSession httpSession) throws MessagingException {
         if (vnp_ResponseCode.equals("00")){
             Orders getOrders = ordersService.getOrders(vnp_OrderInfo);
             ordersService.sendEmail(getOrders.getIdUserOrder().getEmail(), ordersService.getDetailsOrder(getOrders.getIdOrders()));

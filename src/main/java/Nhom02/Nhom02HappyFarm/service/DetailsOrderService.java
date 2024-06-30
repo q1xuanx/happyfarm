@@ -28,7 +28,9 @@ public class DetailsOrderService {
         DetailsOrders detailsOrders = new DetailsOrders();
         detailsOrders.setIdOrders(orders);
         detailsOrders.setQuantity(cartItems.getQuantity());
-        detailsOrders.setIdFertilizer(cartItems.getIdFertilizer());
+        detailsOrders.setNameFertilizer(cartItems.getIdFertilizer().getNameFertilizer());
+        detailsOrders.setDonViTinh(cartItems.getIdFertilizer().getDonViTinh());
+        detailsOrders.setPriceFertilizer(cartItems.getIdFertilizer().getPrice());
         try {
             detailsOrdersRepository.save(detailsOrders);
             editQuantity(cartItems.getIdFertilizer(), cartItems.getQuantity());

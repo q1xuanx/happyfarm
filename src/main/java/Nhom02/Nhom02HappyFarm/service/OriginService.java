@@ -35,8 +35,6 @@ public class OriginService {
             this.origin.save(origin);
         }
     }
-
-
     public void AddOrEditOriginFertilizer(OriginFertilizer originFertilizer){
         origin.save(originFertilizer);
     }

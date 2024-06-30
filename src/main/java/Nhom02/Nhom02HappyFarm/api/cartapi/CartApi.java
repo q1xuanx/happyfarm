@@ -34,7 +34,7 @@ public class CartApi {
     @GetMapping("/getalllistitem")
     public ResponseEntity<Object> getListItemOfUser(){
         try{
-            return ResponseEntity.ok(responseHandler.successResponse("Get list cart of user", cartItemService.listCart("")));
+            return ResponseEntity.ok(responseHandler.successResponse("Get list cart of user", cartItemService.listCartOfAll()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }

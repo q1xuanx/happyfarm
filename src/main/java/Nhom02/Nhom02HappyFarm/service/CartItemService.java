@@ -24,6 +24,7 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final UsersService usersService;
     private final FertilizerService fertilizerService;
+
     public int addNewItem(String idItems, int quantity, String idUser) throws Exception {
         List<CartItems> itemUserHave = cartItemRepository.findAll().stream().filter(s-> s.getUsers().getIdUser().equals(idUser)).collect(Collectors.toList());
         for (CartItems ca : itemUserHave){
@@ -76,6 +77,11 @@ public class CartItemService {
         }
         return -1;
     }
+
+    public List<CartItems> listCartOfAll(){
+        return cartItemRepository.findAll();
+    }
+
     public List<CartItems> listCart (String idUser){
         if(idUser.isEmpty()){
             return cartItemRepository.findAll();

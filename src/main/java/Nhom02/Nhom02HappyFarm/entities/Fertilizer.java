@@ -29,6 +29,8 @@ public class Fertilizer {
     @NotEmpty(message = "Thiếu giới thiệu sản phẩm")
     @Column(name = "Description", nullable = false)
     private String description;
+    private String thanhPhan;
+    private String donViTinh;
     @NotNull(message = "Thiếu giá sản phẩm")
     @Column(name = "Price", nullable = false)
     private float price;
@@ -58,6 +60,7 @@ public class Fertilizer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idBrand")
     private Brand brandName;
+
     //Image File Save
     @Transient
     private MultipartFile fileImageRepresent;
