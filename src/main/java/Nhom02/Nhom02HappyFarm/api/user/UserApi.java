@@ -100,6 +100,27 @@ public class UserApi {
         }
     }
 
+    @ApiOperation(value = "Doi pass 1 user")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "doi pass thanh cong"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
+            @ApiResponse(code = 404, message = "Khong tim thay user, co the bi xoa hoac sai id")
+    })
+    @PutMapping("/changePassUser/{id}")
+    public ResponseEntity<Object> changePassUser(@PathVariable(name = "id") String id, @ModelAttribute Users user) {
+        try{
+            Users getUser = usersService.GetUser(id);
+            if(getUser == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            } else {
+                usersService.changePassword(user);
+                return ResponseEntity.ok(responseHandler.successResponse("Doi mat khau thanh cong", user));
+            }
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
     @ApiOperation(value = "Tra ve list cac user chua bi banned")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Tim thay, tra ve list user"),
