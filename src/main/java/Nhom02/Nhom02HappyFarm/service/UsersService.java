@@ -41,6 +41,24 @@ public class UsersService {
 
     }
 
+    public void changePassword(Users user) throws Exception {
+        try{
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+
+            if(user.getIdUser() != null){
+                Users existingUser = users.findById(user.getIdUser()).orElse(null);
+                if (existingUser != null) {
+                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+                    users.save(existingUser);
+                } else {
+                    throw new Exception("User not found");
+                }
+            }
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
     public void AddOrEditUser(Users user, String roleName) throws Exception{
         try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
@@ -63,11 +81,11 @@ public class UsersService {
                 existingUser.setBanned(user.isBanned());
 
                 //Change password || edit information users
-                String password = existingUser.getPassword();
-                boolean isMatch = passwordEncoder.matches(password, user.getPassword());
-                if (!isMatch){
-                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-                }
+//                String password = existingUser.getPassword();
+//                boolean isMatch = passwordEncoder.matches(password, user.getPassword());
+//                if (!isMatch){
+//                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+//                }
 
                 UserRoles newRole = rolesService.getRoleByName(roleName);
                 existingUser.setRoles(newRole);
