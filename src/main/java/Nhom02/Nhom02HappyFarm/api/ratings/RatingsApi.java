@@ -133,11 +133,11 @@ public class RatingsApi {
             @ApiResponse(code = 201, message = "Them thanh cong"),
             @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
     })
-    public ResponseEntity<Object> addNewRatings(@RequestParam String idUserCheck, @RequestParam String nameFer, @ModelAttribute Ratings ratings){
+    public ResponseEntity<Object> addNewRatings(@ModelAttribute Ratings ratings){
         try{
-            if (!ratingsService.checkOrderOrNot(idUserCheck, nameFer)){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long mua hang de duoc danh gia"));
-            }
+//            if (!ratingsService.checkOrderOrNot(idUserCheck, nameFer)){
+//                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long mua hang de duoc danh gia"));
+//            }
             ratingsService.addNewOrEdit(ratings);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch(Exception e){
