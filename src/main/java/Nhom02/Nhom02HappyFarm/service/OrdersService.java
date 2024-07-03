@@ -174,4 +174,12 @@ public class OrdersService {
         helper.setText(emailContent.toString(), true);
         mailSender.send(mimeMessage);
     }
+
+    public List<Object[]> getMonthlyStatistics(int year) {
+        return ordersRepository.getMonthlyStatistics(year);
+    }
+
+    public List<Orders> getOrdersByMonthAndYear(int year, int month) {
+        return ordersRepository.findOrdersByMonthAndYear(year, month, "Đã Đặt".toLowerCase().trim());
+    }
 }

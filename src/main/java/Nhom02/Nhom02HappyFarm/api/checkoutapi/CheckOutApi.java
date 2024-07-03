@@ -121,4 +121,19 @@ public class CheckOutApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
+
+    @ApiOperation(value = "Get order status đã đặt theo thang/nam")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Lay thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay du lieu")
+    })
+    @GetMapping("/monthly")
+    public ResponseEntity<Object> getOrdersByMonthAndYear(@RequestParam int year, @RequestParam int month) {
+        try {
+            List<Orders> orders = ordersService.getOrdersByMonthAndYear(year, month);
+            return ResponseEntity.ok(responseHandler.successResponse("Danh sách đơn hàng đã đặt trong tháng và năm", orders));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
 }
