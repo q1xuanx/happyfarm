@@ -60,6 +60,34 @@ public class RatingsApi {
          }
     }
 
+    @GetMapping("/getAvg")
+    @ApiOperation(value = "Lay diem danh gia trung binh cua phan bon")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Tinh thanh cong"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh tinh toan"),
+    })
+    public ResponseEntity<Object> avgRate(@RequestParam String idFer){
+        try{
+            return ResponseEntity.ok(responseHandler.successResponse("Tinh thanh cong", ratingsService.avgPointRatings(idFer)));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Loi trong qua trinh tinh toan"));
+        }
+    }
+
+    @GetMapping("/countrate")
+    @ApiOperation(value = "Lay diem danh gia trung binh cua phan bon")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Loi trong qua trinh tinh toan"),
+    })
+    public ResponseEntity<Object> countRate(@RequestParam String idFer){
+        try{
+            return ResponseEntity.ok(responseHandler.successResponse("Tinh thanh cong", ratingsService.totalRatings(idFer)));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Loi trong qua trinh tinh toan"));
+        }
+    }
+
     @GetMapping("/getListByIdFer/{idFer}")
     @ApiOperation(value = "Lay danh sach comment cua phan bon theo idFer")
     @ApiResponses({
@@ -105,8 +133,11 @@ public class RatingsApi {
             @ApiResponse(code = 201, message = "Them thanh cong"),
             @ApiResponse(code = 400, message = "Loi trong qua trinh thuc hien")
     })
-    public ResponseEntity<Object> addNewRatings(@Valid @ModelAttribute Ratings ratings){
+    public ResponseEntity<Object> addNewRatings(@RequestParam String idUserCheck, @RequestParam String nameFer, @ModelAttribute Ratings ratings){
         try{
+            if (!ratingsService.checkOrderOrNot(idUserCheck, nameFer)){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long mua hang de duoc danh gia"));
+            }
             ratingsService.addNewOrEdit(ratings);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch(Exception e){

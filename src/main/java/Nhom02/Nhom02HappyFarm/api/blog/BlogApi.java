@@ -53,7 +53,7 @@ public class BlogApi {
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
     })
     @PostMapping("/addblog")
-    public ResponseEntity<Object> addNewBlog(@RequestBody Blog blog){
+    public ResponseEntity<Object> addNewBlog(@ModelAttribute Blog blog){
         try {
             if(blog.getDetails().isEmpty()){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long nhap chi tiet blog"));
@@ -95,7 +95,7 @@ public class BlogApi {
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
     })
     @PutMapping("/edit")
-    public ResponseEntity<Object> editBlog(@RequestBody Blog blog){
+    public ResponseEntity<Object> editBlog(@ModelAttribute Blog blog){
         try{
             Blog check = blogService.getBlog(blog.getIdBlog());
             if (check == null){
