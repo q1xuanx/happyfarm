@@ -9,17 +9,18 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-@Data
-@Entity
 @Getter
 @Setter
-public class VoucherDiscount {
+@Entity
+@Data
+public class Contacts {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String idVoucher;
-    private String codeVoucher;
-    private int discountPercent;
-    private String startDate;
-    private String endDate;
-    private boolean isDelete;
+    private String idContact;
+    private String email;
+    private String content;
+    private String name;
+    private String phoneNumber;
+    private String dateSend;
 }
+

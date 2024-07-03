@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/typefertilizer")
 @RequiredArgsConstructor
 @Api(value = "Quan ly cac loai phan bon")
@@ -98,6 +98,25 @@ public class TypeFertilizerApi {
         }
     }
 
+    @ApiOperation(value = "Tra ve 1 list cac xuat voi cac loai phan bon chua bi xoa (Isdelete = true)")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve list"),
+            @ApiResponse(code = 204, message = "List rong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh tim kiem")
+    })
+    @GetMapping("/deletelist")
+    public ResponseEntity<Object> delType(){
+        try {
+            List<TypeFertilizer> typeFer = typeFertilizerService.GetTypeFertilizerDelete();
+            if(typeFer.isEmpty()){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("List rong"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", typeFer));
+        }catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
     @ApiOperation(value = "Tìm loại phân bón với tên do nguoi dung nhap")
     @ApiResponses(value ={
             @ApiResponse(code = 200, message = "Tim thay gia tri va tre ve"),
@@ -132,6 +151,22 @@ public class TypeFertilizerApi {
             }
             typeFertilizerService.DeleteTypeFertilizer(idType);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Xoa thanh cong"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Xoa 1 loai phan bón khoi db")
+    @ApiResponses(value ={
+            @ApiResponse(code = 200, message = "Xoa thành công"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh xoa"),
+    })
+    @DeleteMapping("/confirmdelete")
+    public ResponseEntity<Object> confirmDelete(@RequestParam String idType){
+        try {
+            if (typeFertilizerService.ConfirmDelete(idType) == 1){
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Da xoa thanh cong khoi DB"));
+            }
+            return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }

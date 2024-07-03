@@ -11,7 +11,7 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
+//DVT:
 @Data
 @Entity(name = "Fertilizer")
 @Getter
@@ -29,6 +29,8 @@ public class Fertilizer {
     @NotEmpty(message = "Thiếu giới thiệu sản phẩm")
     @Column(name = "Description", nullable = false)
     private String description;
+    private String thanhPhan;
+    private String donViTinh;
     @NotNull(message = "Thiếu giá sản phẩm")
     @Column(name = "Price", nullable = false)
     private float price;
@@ -58,11 +60,10 @@ public class Fertilizer {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idBrand")
     private Brand brandName;
+
     //Image File Save
-    @NotNull(message = "Thiếu ảnh đại diện sản phẩm")
     @Transient
     private MultipartFile fileImageRepresent;
-    @NotNull(message = "Thiếu các ảnh phụ")
     @Transient
     private MultipartFile[] fileImageOptional;
 }

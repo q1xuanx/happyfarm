@@ -15,7 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:8080")
+@CrossOrigin(origins = "*")
 @Api(value = "Add items to buy for users")
 public class CartApi {
     private final FertilizerService fertilizerService;
@@ -34,7 +34,7 @@ public class CartApi {
     @GetMapping("/getalllistitem")
     public ResponseEntity<Object> getListItemOfUser(){
         try{
-            return ResponseEntity.ok(responseHandler.successResponse("Get list cart of user", cartItemService.listCart("")));
+            return ResponseEntity.ok(responseHandler.successResponse("Get list cart of user", cartItemService.listCartOfAll()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }

@@ -5,6 +5,7 @@ import Nhom02.Nhom02HappyFarm.entities.CartItems;
 import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Users;
 import Nhom02.Nhom02HappyFarm.repository.CartItemRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class CartItemService {
     private final CartItemRepository cartItemRepository;
     private final UsersService usersService;
     private final FertilizerService fertilizerService;
+
     public int addNewItem(String idItems, int quantity, String idUser) throws Exception {
         List<CartItems> itemUserHave = cartItemRepository.findAll().stream().filter(s-> s.getUsers().getIdUser().equals(idUser)).collect(Collectors.toList());
         for (CartItems ca : itemUserHave){
@@ -75,10 +77,19 @@ public class CartItemService {
         }
         return -1;
     }
+
+    public List<CartItems> listCartOfAll(){
+        return cartItemRepository.findAll();
+    }
+
     public List<CartItems> listCart (String idUser){
         if(idUser.isEmpty()){
             return cartItemRepository.findAll();
         }
         return cartItemRepository.findAll().stream().filter(s -> s.getUsers().getIdUser().equals(idUser)).toList();
+    }
+    @Transactional
+    public void deleteCart(CartItems cart){
+        cartItemRepository.delete(cart);
     }
 }

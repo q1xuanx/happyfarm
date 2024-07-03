@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 
 @Data
 @Entity
@@ -14,9 +16,7 @@ public class TypeFertilizer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idTypeFertilizer;
-
     @Column(name = "nameTypeFertilizer", nullable = false)
     private String nameTypeFertilizer;
-
     private boolean isDelete;
 }

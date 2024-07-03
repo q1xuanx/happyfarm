@@ -1,6 +1,8 @@
 package Nhom02.Nhom02HappyFarm.service;
 
+import Nhom02.Nhom02HappyFarm.entities.CartItems;
 import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
+import Nhom02.Nhom02HappyFarm.repository.CartItemRepository;
 import Nhom02.Nhom02HappyFarm.repository.FertilizerRepository;
 import com.cloudinary.Cloudinary;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class FertilizerService {
     private final Cloudinary cloudinary;
     private final FertilizerRepository fertilizerRepository;
+    private final CartItemRepository cartItemRepository;
     private final int sizeOfPage = 10;
 
     public List<Fertilizer> listFertilizer(){
@@ -46,6 +49,7 @@ public class FertilizerService {
             throw new IOException(e.getMessage());
         }
     }
+
 
     public Fertilizer GetFertilizer(String id) throws IOException {
         try {
@@ -86,6 +90,25 @@ public class FertilizerService {
             throw new ExecutionException(ex);
         }
     }
+    public int deleteFertilizerOut(String id){
+        try {
+            List<CartItems> listCart = cartItemRepository.findAll().stream().filter(s -> s.getIdFertilizer().getIdFertilizer().equals(id)).toList();
+            cartItemRepository.deleteAll(listCart);
+            fertilizerRepository.deleteById(id);
+            return 1;
+        }catch (Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public boolean checkName(String name){
+        return fertilizerRepository.findAll().stream().anyMatch(s -> s.getNameFertilizer().equals(name));
+    }
+
+    public Fertilizer findExacfertilizer(String name){
+        return fertilizerRepository.findAll().stream().filter(s->s.getNameFertilizer().equals(name)).findFirst().get();
+    }
 
     //Tìm phân bón qua tên
     public List<Fertilizer> findFertilizerByName(String name){
@@ -113,6 +136,13 @@ public class FertilizerService {
     //Tìm phân bón chưa delete
     public List<Fertilizer> FertilizerNotDelete(){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
+        Pageable page = PageRequest.of(0 , sizeOfPage);
+        Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
+        return paged.getContent();
+    }
+
+    public List<Fertilizer> FertilizerDel(){
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isDelete());
         Pageable page = PageRequest.of(0 , sizeOfPage);
         Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
         return paged.getContent();

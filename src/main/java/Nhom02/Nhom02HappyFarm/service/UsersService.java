@@ -66,20 +66,16 @@ public class UsersService {
 
             if(user.getIdUser() == null){
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
-
                 UserRoles roles = rolesService.getRoleByName("ROLE_USER");
                 user.setRoles(roles);
-
                 users.save(user);
             }else {
                 Users existingUser = users.findById(user.getIdUser()).orElse(null);
-
                 existingUser.setUsername(user.getUsername());
                 existingUser.setFullName(user.getFullName());
                 existingUser.setEmail(user.getEmail());
                 existingUser.setDob(user.getDob());
                 existingUser.setBanned(user.isBanned());
-
                 //Change password || edit information users
 //                String password = existingUser.getPassword();
 //                boolean isMatch = passwordEncoder.matches(password, user.getPassword());
@@ -144,5 +140,9 @@ public class UsersService {
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
+    }
+    public Optional<Users> login (String username, String password){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        return users.findAll().stream().filter(s -> s.getUsername().equals(username) && passwordEncoder.matches(password, s.getPassword()) && !s.isBanned()).findFirst();
     }
 }

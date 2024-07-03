@@ -3,6 +3,8 @@ package Nhom02.Nhom02HappyFarm.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 public class Brand {
