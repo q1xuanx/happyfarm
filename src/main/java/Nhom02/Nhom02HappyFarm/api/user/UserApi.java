@@ -72,7 +72,7 @@ public class UserApi {
     @PostMapping("/addNew")
     public ResponseEntity<Object> createNewUser(@ModelAttribute Users user, @RequestParam(required = false) String nameRoles) {
         try {
-            usersService.AddOrEditUser(user, nameRoles);
+            usersService.AddOrEditUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
@@ -92,7 +92,7 @@ public class UserApi {
             if (getUser == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             } else {
-                usersService.AddOrEditUser(user, nameRoles);
+                usersService.AddOrEditUser(user);
                 return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", user));
             }
         } catch (Exception e) {

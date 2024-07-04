@@ -59,7 +59,7 @@ public class UsersService {
         }
     }
 
-    public void AddOrEditUser(Users user, String roleName) throws Exception{
+    public void AddOrEditUser(Users user) throws Exception{
         try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
@@ -76,16 +76,8 @@ public class UsersService {
                 existingUser.setEmail(user.getEmail());
                 existingUser.setDob(user.getDob());
                 existingUser.setBanned(user.isBanned());
-                //Change password || edit information users
-//                String password = existingUser.getPassword();
-//                boolean isMatch = passwordEncoder.matches(password, user.getPassword());
-//                if (!isMatch){
-//                    existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//                }
-
-                UserRoles newRole = rolesService.getRoleByName(roleName);
+                UserRoles newRole = rolesService.getRoleByName(user.getRoles().getNameRoles());
                 existingUser.setRoles(newRole);
-
                 users.save(existingUser);
             }
         }catch (Exception e){
