@@ -141,6 +141,44 @@ public class FertilizerService {
         return paged.getContent();
     }
 
+    public String checkExistForAdd(Fertilizer fertilizer){
+        if (fertilizer.getNameFertilizer().isEmpty()){
+            return "Name not found";
+        }else if (fertilizer.getPrice() == 0){
+            return "Price not found";
+        }else if (fertilizer.getDetails().isEmpty()){
+            return "Details not found";
+        }else if (fertilizer.getDescription().isEmpty()){
+            return "Description not found";
+        }else if (fertilizer.getFileImageRepresent() == null){
+            return "Image represent not found";
+        }else if (fertilizer.getFileImageOptional() == null){
+            return "Image optional not found";
+        }else if (fertilizer.getDonViTinh().isEmpty()){
+            return "Don vi tinh not found"; 
+        }else if (fertilizer.getThanhPhan().isEmpty()){
+            return "Thanh phan not found";
+        }
+        return "OK";
+    }
+
+    public String checkExistForEdit(Fertilizer fertilizer){
+        if (fertilizer.getNameFertilizer().isEmpty()){
+            return "Name not found";
+        }else if (fertilizer.getPrice() == 0){
+            return "Price not found";
+        }else if (fertilizer.getDetails().isEmpty()){
+            return "Details not found";
+        }else if (fertilizer.getDescription().isEmpty()){
+            return "Description not found";
+        }else if (fertilizer.getDonViTinh().isEmpty()){
+            return "Don vi tinh not found";
+        }else if (fertilizer.getThanhPhan().isEmpty()){
+            return "Thanh phan not found";
+        }
+        return "OK";
+    }
+
     public List<Fertilizer> FertilizerDel(){
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isDelete());
         Pageable page = PageRequest.of(0 , sizeOfPage);

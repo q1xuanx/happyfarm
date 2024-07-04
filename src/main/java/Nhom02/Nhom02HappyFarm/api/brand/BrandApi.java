@@ -44,6 +44,9 @@ public class BrandApi {
             if (brand.getNameBrand().isEmpty()){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found name brand"));
             }
+            if (brandService.isExist(brand.getNameBrand())){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name brand exist"));
+            }
             brandService.AddOrEditBrand(brand);
             return ResponseEntity.ok(responseHandler.successResponse("Create succesfully", brand));
         }catch (Exception error) {
@@ -106,6 +109,12 @@ public class BrandApi {
             if (getBrand == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found brand"));
             } else {
+                if (brand.getNameBrand().isEmpty()){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found name brand"));
+                }
+                if (brandService.isExist(brand.getNameBrand())){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Name brand exist"));
+                }
                 brandService.AddOrEditBrand(brand);
                 return ResponseEntity.ok(responseHandler.successResponse("Edit brand success", brand));
             }

@@ -3,6 +3,7 @@ package Nhom02.Nhom02HappyFarm.service;
 import Nhom02.Nhom02HappyFarm.config.VnpayConfig;
 import Nhom02.Nhom02HappyFarm.entities.CartItems;
 import Nhom02.Nhom02HappyFarm.entities.DetailsOrders;
+import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.entities.Orders;
 import Nhom02.Nhom02HappyFarm.repository.OrdersRepository;
 import jakarta.mail.MessagingException;
@@ -15,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 
@@ -33,8 +35,7 @@ public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final CartItemService cartItemService;
     private final DetailsOrderService detailsOrderService;
-    private final VoucherService voucherService;
-    private final UsersService usersService;
+    private final FertilizerService fertilizerService;
     private final float discount_for_htx = 0.5F;
     private final float discount_for_agency = 0.4F;
     private final float discount_for_farmer = 0.3F;
@@ -48,7 +49,15 @@ public class OrdersService {
     public Orders getOrders(String idOrder) {
         return ordersRepository.findById(idOrder).get();
     }
-
+    public boolean checkQuantity(List<CartItems> cartItems) throws IOException {
+        for(CartItems cart: cartItems){
+            Fertilizer fer = fertilizerService.GetFertilizer(cart.getIdFertilizer().getIdFertilizer());
+            if (cart.getQuantity() > fer.getNums()){
+                return false;
+            }
+        }
+        return true;
+    }
     public void addNewOrder(Orders order, List<CartItems> cartItems) throws ExecutionException {
         LocalDate getCurrentDate = LocalDate.now();
         order.setOrderDate(Date.valueOf(getCurrentDate));

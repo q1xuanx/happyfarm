@@ -55,16 +55,11 @@ public class BlogApi {
     @PostMapping("/addblog")
     public ResponseEntity<Object> addNewBlog(@ModelAttribute Blog blog){
         try {
-            if(blog.getDetails().isEmpty()){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long nhap chi tiet blog"));
-            }else if (blog.getTitle().isEmpty()){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long nhap tieu de"));
-            }else if(blog.getUserCreate() == null) {
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Khong tim thay idUser"));
+            if(!blogService.checkExists(blog).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(blogService.checkExists(blog)));
             }else {
-                Optional<Blog> check = blogService.getAllBlog().stream().filter(s -> s.getTitle().equals(blog.getTitle())).findFirst();
-                if (check.isPresent()){
-                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Tieu de bai viet bi trung"));
+                if (blogService.checkNameExist(blog.getTitle())){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Title exist"));
                 }
             }
             blogService.createOrSaveBlog(blog);
@@ -100,6 +95,9 @@ public class BlogApi {
             Blog check = blogService.getBlog(blog.getIdBlog());
             if (check == null){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            if (!blogService.checkExists(blog).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(blogService.checkExists(blog)));
             }
             blogService.createOrSaveBlog(blog);
             return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", blog));

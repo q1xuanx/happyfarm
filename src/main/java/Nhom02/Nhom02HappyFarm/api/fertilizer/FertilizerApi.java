@@ -76,6 +76,9 @@ public class FertilizerApi {
             if (fertilizerService.checkName(fertilizer.getNameFertilizer())){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Tên đã bị trùng"));
             }
+            if (!fertilizerService.checkExistForAdd(fertilizer).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(fertilizerService.checkExistForEdit(fertilizer)));
+            }
             fertilizerService.addNew(fertilizer);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         } catch (Exception e) {
@@ -135,6 +138,9 @@ public class FertilizerApi {
             Fertilizer find = fertilizerService.GetFertilizer(id);
             if (find == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            if (!fertilizerService.checkExistForAdd(fertilizer).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(fertilizerService.checkExistForEdit(fertilizer)));
             }
             fertilizerService.EditFertilizer(fertilizer);
             return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", fertilizer));

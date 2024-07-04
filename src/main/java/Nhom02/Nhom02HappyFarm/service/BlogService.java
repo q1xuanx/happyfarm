@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BlogService {
     private final BlogRepository blog;
-
+    private final UsersService user;
     public List<Blog> getAllBlog(){
         return blog.findAll();
     }
@@ -30,5 +30,18 @@ public class BlogService {
     }
     public void deleteBlog(String id){
         this.blog.deleteById(id);
+    }
+    public String checkExists(Blog blog) throws Exception {
+        if (blog.getTitle().isEmpty()){
+            return "Title null ";
+        }else if (blog.getDetails().isEmpty()){
+            return "Details null";
+        }else if (user.GetUser(blog.getUserCreate().getIdUser()) == null){
+            return "Not found user";
+        }
+        return "OK";
+    }
+    public boolean checkNameExist(String title){
+        return this.blog.findAll().stream().anyMatch(s->s.getTitle().equals(title));
     }
 }

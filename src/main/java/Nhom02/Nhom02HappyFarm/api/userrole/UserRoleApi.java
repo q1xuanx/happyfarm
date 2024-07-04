@@ -53,6 +53,11 @@ public class UserRoleApi {
     @PostMapping("/addNew")
     public ResponseEntity<Object> createNewUserRole(@RequestBody UserRoles userRole) {
         try{
+            if (userRole.getNameRoles().isEmpty()){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name not found!"));
+            }else if (userRolesService.getRoleByName(userRole.getNameRoles()) != null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name exist"));
+            }
             userRolesService.AddOrEditUserRoles(userRole);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tao moi thanh cong"));
         } catch (Exception e){
@@ -73,6 +78,9 @@ public class UserRoleApi {
             if(getUserRole == null){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             } else {
+                if (userRole.getNameRoles().isEmpty()){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Name not found!"));
+                }
                 userRolesService.AddOrEditUserRoles(userRole);
                 return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", userRole));
             }

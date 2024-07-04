@@ -35,9 +35,17 @@ public class RatingsService {
         }
     }
 
+    public String checkExist(Ratings rate){
+        if (rate.getPoints() == 0){
+            return "Points not found";
+        }else if (rate.getComments().isEmpty()){
+            return "Commnets not found";
+        }
+        return "OK";
+    }
+
     public boolean checkOrderOrNot(String idUser, String nameFer){
         List<Orders> listOrder = orders.getHistoryOrder(idUser);
-        System.out.println(listOrder.size());
         for(Orders orders1 : listOrder){
             Optional<DetailsOrders> det = detailsOrder.getByIdOrder(orders1.getIdOrders()).stream().filter(s -> s.getNameFertilizer().equals(nameFer)).findFirst();
             if(det.isPresent()) return true;

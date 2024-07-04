@@ -85,7 +85,24 @@ public class UsersService {
         }
     }
 
+    public String checkExist(Users user){
+        if (user.getUsername().isEmpty()){
+            return "Username not found";
+        }else if (user.getDob().isEmpty()){
+            return "Date of birth not found";
+        }else if (user.getEmail().isEmpty()){
+            return "Email not found";
+        }else if (user.getPassword().isEmpty()){
+            return "Password not found";
+        }else if (user.getFullName().isEmpty()){
+            return "Full name not found";
+        }
+        return "OK";
+    }
 
+    public boolean checkExistUserName(String username){
+        return users.findAll().stream().anyMatch(s -> s.getUsername().equals(username));
+    }
     public Users GetUser(String id) throws Exception{
         try {
             Optional<Users> user = users.findById(id);

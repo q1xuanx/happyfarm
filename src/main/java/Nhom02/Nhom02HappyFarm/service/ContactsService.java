@@ -28,4 +28,16 @@ public class ContactsService {
     public void delete(String id){
         contactRepository.deleteById(id);
     }
+    public String checkExist(Contacts contacts){
+        if (contacts.getName().isEmpty()){
+            return "Name not found";
+        }else if (contacts.getContent().isEmpty()){
+            return "Content not found";
+        }else if(contacts.getEmail().isEmpty()){
+            return "Email not found";
+        }else if(contacts.getPhoneNumber().isEmpty()){
+            return "Phone not found";
+        }
+        return "OK";
+    }
 }

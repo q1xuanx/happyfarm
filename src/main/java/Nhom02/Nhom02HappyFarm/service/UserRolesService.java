@@ -42,7 +42,7 @@ public class UserRolesService {
             throw new Exception(e.getMessage());
         }
     }
-
+    
     public UserRoles GetUserRole(String id) throws Exception{
         try {
             Optional<UserRoles> userRole = userRoles.findById(id);

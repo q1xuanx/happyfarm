@@ -75,8 +75,11 @@ public class VoucherApi {
     @PostMapping("/addnew")
     public ResponseEntity<Object> addNewVoucher(@RequestBody VoucherDiscount voucher) {
         try{
-            if (voucher.getCodeVoucher().isEmpty()){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse("Code method is empty"));
+            if (!voucherService.checkExist(voucher).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(voucherService.checkExist(voucher)));
+            }
+            if (voucherService.getVoucherByName(voucher.getCodeVoucher()) != null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Code exist"));
             }
             voucherService.AddOrEditPaymentMethod(voucher);
             return ResponseEntity.ok().body(responseHandler.successResponseButNotHaveContent("Tao moi thanh cong"));

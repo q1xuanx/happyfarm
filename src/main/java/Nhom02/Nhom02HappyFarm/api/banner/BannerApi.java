@@ -44,6 +44,9 @@ public class BannerApi {
     @PostMapping("/addbanner")
     public ResponseEntity<Object> addBanner(@ModelAttribute Banner banner){
         try {
+            if (!bannerService.checkExist(banner).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(bannerService.checkExist(banner)));
+            }
             bannerService.addOrEditBanner(banner);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Add banner thanh cong"));
         }catch (Exception e){
@@ -53,6 +56,9 @@ public class BannerApi {
     @PutMapping("/editbanner")
     public ResponseEntity<Object> editBanner(@ModelAttribute Banner banner){
         try {
+            if (!bannerService.checkExist(banner).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(bannerService.checkExist(banner)));
+            }
             bannerService.addOrEditBanner(banner);
             return ResponseEntity.ok(responseHandler.successResponse("Edit banner thanh cong", bannerService.getAllBanner()));
         }catch (Exception e){

@@ -63,6 +63,10 @@ public class BrandService {
         }
     }
 
+    public boolean isExist(String name){
+        return brandRepository.findByNameBrand(name).stream().findFirst().isPresent();
+    }
+
     public void checkValidName(String name){
         if (brandRepository.findAll().stream().noneMatch(s -> s.getNameBrand().equals(name))){
             Brand brand = new Brand();

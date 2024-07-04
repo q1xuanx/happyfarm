@@ -105,4 +105,7 @@ public class TypeFertilizerService {
             typeFer.save(tyoe);
         }
     }
+    public boolean existName(String name){
+        return typeFer.findAll().stream().anyMatch(s -> s.getNameTypeFertilizer().equals(name));
+    }
 }

@@ -43,6 +43,9 @@ public class ContactsApi {
     @PostMapping("/addcontact")
     public ResponseEntity<Object> addnewContact(@RequestBody Contacts contacts){
         try{
+            if(!contactsService.checkExist(contacts).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(contactsService.checkExist(contacts)));
+            }
             contactsService.addNew(contacts);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Add thanh cong"));
         }catch (Exception e){

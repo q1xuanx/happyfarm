@@ -50,6 +50,13 @@ public class TypeFertilizerApi {
     @PostMapping("/addnew")
     public ResponseEntity<Object> createNewTypeFertilizer(@RequestBody TypeFertilizer typeFertilizer){
         try{
+            if (typeFertilizer == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found "));
+            }else if(typeFertilizer.getNameTypeFertilizer().isEmpty()){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name null"));
+            }else if (typeFertilizerService.existName(typeFertilizer.getNameTypeFertilizer())){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name already exist"));
+            }
             typeFertilizerService.AddOrEditTypeFertilizer(typeFertilizer);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch (Exception e) {

@@ -135,9 +135,9 @@ public class RatingsApi {
     })
     public ResponseEntity<Object> addNewRatings(@ModelAttribute Ratings ratings){
         try{
-//            if (!ratingsService.checkOrderOrNot(idUserCheck, nameFer)){
-//                return ResponseEntity.badRequest().body(responseHandler.failResponse("Vui long mua hang de duoc danh gia"));
-//            }
+            if (!ratingsService.checkExist(ratings).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(ratingsService.checkExist(ratings)));
+            }
             ratingsService.addNewOrEdit(ratings);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
         }catch(Exception e){
@@ -157,6 +157,9 @@ public class RatingsApi {
             Ratings rate = ratingsService.getRatingsById(id);
             if (rate == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            if (!ratingsService.checkExist(ratings).equals("OK")){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(ratingsService.checkExist(ratings)));
             }
             ratingsService.addNewOrEdit(ratings);
             return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", ratings));

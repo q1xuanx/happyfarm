@@ -4,6 +4,7 @@ package Nhom02.Nhom02HappyFarm.service;
 import Nhom02.Nhom02HappyFarm.entities.VoucherDiscount;
 import Nhom02.Nhom02HappyFarm.repository.VoucherRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -47,5 +48,16 @@ public class VoucherService {
     }
     public List<VoucherDiscount> getListVoucherNotExp(){
         return voucherRepository.findAll().stream().filter(s -> isNotExp(s.getStartDate(), s.getEndDate())).toList();
+    }
+
+    public String checkExist(VoucherDiscount voucher){
+        if (voucher.getCodeVoucher().isEmpty()){
+            return "Code method is empty";
+        }else if (voucher.getStartDate().isEmpty() || voucher.getEndDate().isEmpty()){
+            return "Start date or end date not found";
+        }else if (voucher.getDiscountPercent() == 0){
+            return"Discount percent not found";
+        }
+        return "OK";
     }
 }

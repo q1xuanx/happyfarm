@@ -42,6 +42,9 @@ public class CheckOutApi {
     @PostMapping("/getinfouser")
     public ResponseEntity<Object> getInfo(@RequestParam String idUser, @ModelAttribute Orders orders, HttpServletRequest req, HttpSession session) throws ExecutionException {
         try {
+            if (!ordersService.checkQuantity(cartItemService.listCart(idUser))){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Quantity error"));
+            }
             ordersService.addNewOrder(orders, cartItemService.listCart(idUser));
             if (orders.getPaymentMethod().getNameMethod().trim().equals("COD (Thanh toán khi nhận hàng)")){
                 ordersService.sendEmail(orders.getIdUserOrder().getEmail(), ordersService.getDetailsOrder(orders.getIdOrders()));
@@ -76,6 +79,9 @@ public class CheckOutApi {
     @PutMapping("/editorder")
     public ResponseEntity<Object> editStatusOrder(@ModelAttribute Orders orders){
         try {
+            if (orders == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found orders"));
+            }
             ordersService.editOrder(orders);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Edit thanh cong"));
         }catch (Exception e){

@@ -36,5 +36,4 @@ public class PaymentMethodService {
     public PaymentMethod getPaymentMethod(String id) {
         return paymentMethodRepository.findById(id).get();
     }
-
 }

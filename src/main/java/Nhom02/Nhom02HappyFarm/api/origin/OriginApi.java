@@ -83,6 +83,11 @@ public class OriginApi {
     @PostMapping("/addnew")
     public ResponseEntity<Object> createNewTypeFertilizer(@Valid @RequestBody OriginFertilizer originFertilizer) {
         try {
+            if (originFertilizer.getNameOrigin().isEmpty()) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name null"));
+            } else if (originService.existName(originFertilizer.getNameOrigin())) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name exist"));
+            }
             originService.AddOrEditOriginFertilizer(originFertilizer);
             return ResponseEntity.ok(responseHandler.successResponse("Created", originFertilizer));
         } catch (Exception error) {
@@ -101,6 +106,10 @@ public class OriginApi {
         try {
             if (getOrigin == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            } else if (originFertilizer.getNameOrigin().isEmpty()) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name null"));
+            } else if (originService.existName(originFertilizer.getNameOrigin())) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Name exist"));
             }
             originService.AddOrEditOriginFertilizer(originFertilizer);
             return ResponseEntity.ok(responseHandler.successResponse("Add success", originFertilizer));
@@ -179,7 +188,7 @@ public class OriginApi {
             @ApiResponse(code = 404, message = "Co loi xay ra trong qua trinh tim kiem")
     })
     @DeleteMapping("/confirmDelete")
-    public ResponseEntity<Object> confirmDelete(@RequestParam String id){
+    public ResponseEntity<Object> confirmDelete(@RequestParam String id) {
         try {
             if (originService.confirmDelete(id) == 1) {
                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Đã xóa "));

@@ -72,6 +72,10 @@ public class OriginService {
         return 1;
     }
 
+    public boolean existName(String name){
+        return origin.findAll().stream().anyMatch(s -> s.getNameOrigin().equals(name));
+    }
+
     public List<OriginFertilizer> findByName(String name){
         return origin.findByNameOrigin(name);
     }

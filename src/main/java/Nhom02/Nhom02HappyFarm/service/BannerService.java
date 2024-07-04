@@ -49,4 +49,14 @@ public class BannerService {
     public List<Banner> getAllBanner(){
         return bannerRepository.findAll();
     }
+    public String checkExist(Banner banner){
+        if (banner.getUrl().isEmpty()){
+            return "Url not found !";
+        }else if (banner.getImage() == null){
+            return "Image not found !";
+        }else if (banner.getExpireDate().isEmpty()){
+            return "Expire date not found ";
+        }
+        return "OK";
+    }
 }
