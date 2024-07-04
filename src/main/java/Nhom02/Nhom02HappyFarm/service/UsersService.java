@@ -59,11 +59,16 @@ public class UsersService {
         }
     }
 
+    public void AddNewUser(Users user){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        users.save(user);
+    }
+
+    //Service nay de dang ky
     public void AddOrEditUser(Users user) throws Exception{
         try {
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-
-
             if(user.getIdUser() == null){
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 UserRoles roles = rolesService.getRoleByName("ROLE_USER");
@@ -100,9 +105,22 @@ public class UsersService {
         return "OK";
     }
 
+    public boolean checkEmail(String email){
+        return users.findAll().stream().anyMatch(s -> s.getEmail().equals(email));
+    }
+
+    public boolean checkEmailForEdit(String email, String idUser){
+        return users.findAll().stream().anyMatch(s -> s.getEmail().equals(email) && !s.getIdUser().equals(idUser));
+    }
+
     public boolean checkExistUserName(String username){
         return users.findAll().stream().anyMatch(s -> s.getUsername().equals(username));
     }
+
+    public boolean checkExistUserNameForEdit(String username, String idUser){
+        return users.findAll().stream().anyMatch(s -> s.getUsername().equals(username) && !s.getIdUser().equals(idUser));
+    }
+
     public Users GetUser(String id) throws Exception{
         try {
             Optional<Users> user = users.findById(id);

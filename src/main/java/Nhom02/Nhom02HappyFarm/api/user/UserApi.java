@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.User;
+import org.hibernate.jdbc.Expectation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -64,7 +65,7 @@ public class UserApi {
         return ResponseEntity.badRequest().body(responseHandler.failResponse("Tài khoản hoặc mật khẩu không tồn tại hoặc tài khoản đã bị khóa"));
     }
 
-    @ApiOperation(value = "Them moi user")
+    @ApiOperation(value = "Chuc nang de dang ky, dat o phia user register")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Them user thanh cong"),
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh them user, kiem tra xem co gia tri null hay khong ?")
@@ -76,6 +77,8 @@ public class UserApi {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse(usersService.checkExist(user)));
             }else if (usersService.checkExistUserName(user.getUsername())){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("User name exist"));
+            }else if (usersService.checkEmail(user.getEmail())){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Email exist"));
             }
             usersService.AddOrEditUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));
@@ -99,11 +102,37 @@ public class UserApi {
             } else {
                 if(!usersService.checkExist(user).equals("OK")){
                     return ResponseEntity.badRequest().body(responseHandler.failResponse(usersService.checkExist(user)));
+                }else if (usersService.checkEmailForEdit(user.getEmail(), user.getIdUser())){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Email exist"));
+                }else if (usersService.checkExistUserNameForEdit(user.getUsername(), user.getIdUser())){
+                    return ResponseEntity.badRequest().body(responseHandler.failResponse("Username exist"));
                 }
                 usersService.AddOrEditUser(user);
                 return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", user));
             }
         } catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
+    @ApiOperation(value = "Add 1 user dung o phia admin ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Add thanh cong"),
+            @ApiResponse(code = 404, message = "Loi khi add")
+    })
+    @PostMapping("/addnewuser")
+    public ResponseEntity<Object> addNewUserByAdmin(@ModelAttribute Users user){
+        try {
+            if (!usersService.checkExist(user).equals("OK")) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(usersService.checkExist(user)));
+            } else if (usersService.checkEmail(user.getEmail())) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Email exist"));
+            } else if (usersService.checkExistUserName(user.getUsername())) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("User name exist"));
+            }
+            usersService.AddNewUser(user);
+            return ResponseEntity.ok(responseHandler.successResponse("Add thanh cong", user));
+        }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
