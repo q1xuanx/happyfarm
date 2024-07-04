@@ -141,6 +141,14 @@ public class FertilizerService {
         return paged.getContent();
     }
 
+    public Page<Fertilizer> disPlayFertilizer(int numberOfPage, int sizePage){
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
+        Pageable page = PageRequest.of(numberOfPage , sizePage);
+        Page<Fertilizer> paged = fertilizerRepository.findAll(spec,page);
+        return paged;
+    }
+
+
     public String checkExistForAdd(Fertilizer fertilizer){
         if (fertilizer.getNameFertilizer().isEmpty()){
             return "Name not found";

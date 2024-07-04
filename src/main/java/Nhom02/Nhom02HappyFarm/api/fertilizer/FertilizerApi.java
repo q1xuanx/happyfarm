@@ -12,6 +12,7 @@ import io.swagger.annotations.*;
 import io.swagger.models.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -106,10 +107,10 @@ public class FertilizerApi {
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = false")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
     @GetMapping("/listfer")
-    public ResponseEntity<Object> getAllFerNotDell() {
+    public ResponseEntity<Object> getAllFerNotDell(@RequestParam int numberOfPage, @RequestParam int sizeOfPage) {
         try {
-            List<Fertilizer> listFertilizer = fertilizerService.FertilizerNotDelete();
-            return ResponseEntity.ok(responseHandler.successResponse("Get list thanh cong", listFertilizer));
+            Page<Fertilizer> listFertilizer = fertilizerService.disPlayFertilizer(numberOfPage, sizeOfPage);
+            return ResponseEntity.ok(responseHandler.successAndPage("Get list thanh cong", listFertilizer.getContent(), listFertilizer.getTotalPages()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

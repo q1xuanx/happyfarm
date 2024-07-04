@@ -29,4 +29,13 @@ public class ResponseHandler {
         response.put("status", true);
         return response;
     }
+
+    public Map<String,Object> successAndPage(String successMessage, Object args, int numberOfPages){
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Success: " + successMessage);
+        response.put("status", true);
+        response.put("numberOfPages", numberOfPages);
+        response.put("data", args);
+        return response;
+    }
 }
