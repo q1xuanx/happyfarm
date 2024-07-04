@@ -10,6 +10,7 @@ public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String idBlog;
+    @Column(columnDefinition = "LONGTEXT")
     private String details;
     private Date timeCreate;
     private String title;
