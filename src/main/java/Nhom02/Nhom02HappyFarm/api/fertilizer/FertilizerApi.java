@@ -87,6 +87,23 @@ public class FertilizerApi {
         }
     }
 
+    @ApiOperation(value = "Tìm thông tin pphaanbon theo URL")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @GetMapping("/fertilizerget/{url}")
+    public ResponseEntity<Object> getFertilizerByURL(@PathVariable String url){
+        try {
+            Fertilizer fer = fertilizerService.getFertlizerByURL(url);
+            if (fer == null) {
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found !"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get thanh cong", fer));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = 1 và 0")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Thành công"),

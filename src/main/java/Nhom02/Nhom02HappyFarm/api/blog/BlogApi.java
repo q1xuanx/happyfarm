@@ -47,6 +47,25 @@ public class BlogApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
+
+    @ApiOperation(value = "Lay blog boi url")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
+    })
+    @GetMapping("/blogget/{url}")
+    public ResponseEntity<Object> getBlogByURL(@PathVariable String url){
+        try {
+            Blog blog = blogService.getBlogByUrl(url);
+            if (blog == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponse("Get success", blog));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
     @ApiOperation(value = "Them moi 1 blog, request body la 1 blog")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Thanh cong"),

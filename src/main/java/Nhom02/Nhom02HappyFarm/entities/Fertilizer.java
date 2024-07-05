@@ -31,6 +31,7 @@ public class Fertilizer {
     private String description;
     private String thanhPhan;
     private String donViTinh;
+    private String url;
     @NotNull(message = "Thiếu giá sản phẩm")
     @Column(name = "Price", nullable = false)
     private float price;

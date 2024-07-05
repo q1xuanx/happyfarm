@@ -14,6 +14,7 @@ public class Blog {
     private String details;
     private Date timeCreate;
     private String title;
+    private String url;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idUser")
     private Users userCreate;
