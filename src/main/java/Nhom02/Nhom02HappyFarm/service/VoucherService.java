@@ -37,11 +37,12 @@ public class VoucherService {
         return voucherRepository.findById(id).get();
     }
     public boolean isValid (String nameVoucher){
-        return voucherRepository.findAll().stream().filter(s -> s.getCodeVoucher().equals(nameVoucher) && !s.isDelete()).findFirst().isPresent();
+        return voucherRepository.findAll().stream().anyMatch(s -> s.getCodeVoucher().equals(nameVoucher) && !s.isDelete());
     }
     public VoucherDiscount getVoucherByName(String nameVoucher){
         return voucherRepository.findAll().stream().filter(s -> s.getCodeVoucher().equals(nameVoucher)).findFirst().get();
     }
+
     public boolean isNotExp (String startDate, String endDate){
         LocalDate now = LocalDate.now();
         return LocalDate.parse(startDate).isAfter(now) && LocalDate.parse(endDate).isBefore(now);

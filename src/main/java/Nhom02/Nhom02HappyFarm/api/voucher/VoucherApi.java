@@ -78,7 +78,7 @@ public class VoucherApi {
             if (!voucherService.checkExist(voucher).equals("OK")){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse(voucherService.checkExist(voucher)));
             }
-            if (voucherService.getVoucherByName(voucher.getCodeVoucher()) != null){
+            if (voucherService.isValid(voucher.getCodeVoucher())){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Code exist"));
             }
             voucherService.AddOrEditPaymentMethod(voucher);
