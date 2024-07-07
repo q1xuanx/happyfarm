@@ -22,12 +22,15 @@ public class FertilizerSpecifiation{
     public static Specification<Fertilizer> hasName(String name){
         return (root, query, criteriaBuilder) -> name == null || name.isEmpty() ?
                 criteriaBuilder.conjunction() :
-                criteriaBuilder.equal(root.get("nameFertilizer"), name);
+                criteriaBuilder.like(root.get("nameFertilizer"), "%" + name + "%");
     }
     public static Specification<Fertilizer> isNotDelete(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDelete"), false);
     }
     public static Specification<Fertilizer> isDelete(){
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("isDelete"), true);
+    }
+    public static Specification<Fertilizer> hasPrice(float price){
+        return (root, query, criteriaBuilder) -> criteriaBuilder.lessThanOrEqualTo(root.get("price"), price);
     }
 }

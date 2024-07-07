@@ -28,11 +28,9 @@ public class FertilizerService {
     private final CartItemRepository cartItemRepository;
     private final int sizeOfPage = 10;
 
-    public List<Fertilizer> listFertilizer() {
-        int getTotalItems = fertilizerRepository.findAll().size();
-        Pageable page = PageRequest.of(((getTotalItems + sizeOfPage - 1) / sizeOfPage) - 1, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(page);
-        return paged.getContent();
+    public Page<Fertilizer> listFertilizer(int numberOfPage, int sizeOfPage) {
+        Pageable page = PageRequest.of(numberOfPage, sizeOfPage);
+        return fertilizerRepository.findAll(page);
     }
 
     public void addNew(Fertilizer fertilizer) throws IOException {
@@ -114,36 +112,38 @@ public class FertilizerService {
     }
 
     //Tìm phân bón qua tên
-    public List<Fertilizer> findFertilizerByName(String name) {
+    public Page<Fertilizer> findFertilizerByName(int numberOfPage, int sizeOfPage, String name) {
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasName(name)).and(FertilizerSpecifiation.isNotDelete());
-        Pageable page = PageRequest.of(0, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(spec, page);
-        return paged.getContent();
+        Pageable page = PageRequest.of(numberOfPage, sizeOfPage);
+        return fertilizerRepository.findAll(spec, page);
     }
 
     //Lọc các loại phân bón
-    public List<Fertilizer> filter(String brand, String origin, String typeFer) {
+    public Page<Fertilizer> filter(int numberOfPage, int sizeOfPage, String brand, String origin, String typeFer) {
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasBrand(brand)).and(FertilizerSpecifiation.hasOrigin(origin)).and(FertilizerSpecifiation.hasType(typeFer)).and(FertilizerSpecifiation.isNotDelete());
-        Pageable page = PageRequest.of(0, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(spec, page);
-        return paged.getContent();
+        Pageable page = PageRequest.of(numberOfPage, sizeOfPage);
+        return  fertilizerRepository.findAll(spec, page);
     }
 
-    public List<Fertilizer> filterByType(String typeFer) {
+    public Page<Fertilizer> filterByType(int numberOfPage, int sizePage, String typeFer) {
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasType(typeFer).and(FertilizerSpecifiation.isNotDelete()));
-        Pageable page = PageRequest.of(0, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(spec, page);
-        return paged.getContent();
+        Pageable page = PageRequest.of(numberOfPage, sizePage);
+        return fertilizerRepository.findAll(spec, page);
     }
 
-    //Tìm phân bón chưa delete
-    public List<Fertilizer> FertilizerNotDelete() {
-        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
-        Pageable page = PageRequest.of(0, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(spec, page);
-        return paged.getContent();
+    public Page<Fertilizer> filterByOrigin(int numberOfPage, int sizePage, String origin) {
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasOrigin(origin).and(FertilizerSpecifiation.isNotDelete()));
+        Pageable page = PageRequest.of(numberOfPage, sizePage);
+        return fertilizerRepository.findAll(spec, page);
     }
 
+    public Page<Fertilizer> filterByBrand(int numberOfPage, int sizePage, String brand) {
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasBrand(brand).and(FertilizerSpecifiation.isNotDelete()));
+        Pageable page = PageRequest.of(numberOfPage, sizePage);
+        return fertilizerRepository.findAll(spec, page);
+    }
+
+    //Hien thi cac phan bon chua bi xoa
     public Page<Fertilizer> disPlayFertilizer(int numberOfPage, int sizePage) {
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isNotDelete());
         Pageable page = PageRequest.of(numberOfPage, sizePage);
@@ -194,11 +194,20 @@ public class FertilizerService {
         return fertilizerRepository.findAll().stream().filter(s -> s.getUrl().equals(url)).findFirst().get();
     }
 
-    public List<Fertilizer> FertilizerDel() {
+    public List<Fertilizer> FertilizerNotDelete(){
+        return fertilizerRepository.findAll().stream().filter(s-> !s.isDelete()).collect(Collectors.toList());
+    }
+
+    public Page<Fertilizer> filByPrice(int numberOfPage, int sizeOfPage, float price){
+        Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.hasPrice(price).and(FertilizerSpecifiation.isNotDelete()));
+        Pageable page = PageRequest.of(numberOfPage, sizeOfPage);
+        return fertilizerRepository.findAll(spec, page);
+    }
+
+    public Page<Fertilizer> FertilizerDel(int numberOfPage, int sizeOfPage) {
         Specification<Fertilizer> spec = Specification.where(FertilizerSpecifiation.isDelete());
-        Pageable page = PageRequest.of(0, sizeOfPage);
-        Page<Fertilizer> paged = fertilizerRepository.findAll(spec, page);
-        return paged.getContent();
+        Pageable page = PageRequest.of(numberOfPage, sizeOfPage);
+        return fertilizerRepository.findAll(spec, page);
     }
 
     private Map<Character, Character> checkAccented() {

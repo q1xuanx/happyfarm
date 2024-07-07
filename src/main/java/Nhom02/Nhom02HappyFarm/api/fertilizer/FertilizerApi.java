@@ -109,13 +109,13 @@ public class FertilizerApi {
             @ApiResponse(code = 201, message = "Thành công"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
     @GetMapping("/listallfer")
-    public ResponseEntity<Object> getAllFertilizer() {
+    public ResponseEntity<Object> getAllFertilizer(@RequestParam int numberOfPage, @RequestParam int sizeOfPage) {
         try {
-            List<Fertilizer> listFertilizer = fertilizerService.listFertilizer();
+            Page<Fertilizer> listFertilizer = fertilizerService.listFertilizer(numberOfPage, sizeOfPage);
             if (listFertilizer.isEmpty()) {
                 return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Not found"));
             }
-            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", listFertilizer));
+            return ResponseEntity.ok(responseHandler.successAndPage("Lay list thanh cong", listFertilizer.getContent(), listFertilizer.getTotalPages()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
@@ -136,10 +136,10 @@ public class FertilizerApi {
     @ApiOperation(value = "Trả về 1 list các phân bón bao gom đã IsDelete = true")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
     @GetMapping("/listferdel")
-    public ResponseEntity<Object> getAllFertilizerDel() {
+    public ResponseEntity<Object> getAllFertilizerDel(@RequestParam int numberOfPage, int sizeOfPage) {
         try {
-            List<Fertilizer> listFertilizer = fertilizerService.FertilizerDel();
-            return ResponseEntity.ok(responseHandler.successResponse("Get list thanh cong", listFertilizer));
+            Page<Fertilizer> listFertilizer = fertilizerService.FertilizerDel(numberOfPage, sizeOfPage);
+            return ResponseEntity.ok(responseHandler.successAndPage("Get list thanh cong", listFertilizer.getContent(), listFertilizer.getTotalPages()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -185,32 +185,43 @@ public class FertilizerApi {
     @ApiOperation(value = "Loc phan bón qua ten thuonng hieu, ten xuat xu, ten loai phan bon")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/filer")
-    public ResponseEntity<Object> filer(@RequestParam(required = false) String nameBrand, @RequestParam(required = false) String origin, @RequestParam(required = false) String typFer) {
+    public ResponseEntity<Object> filer(@RequestParam int numberOfPage, @RequestParam int sizeOfPage, @RequestParam(required = false) String nameBrand, @RequestParam(required = false) String origin, @RequestParam(required = false) String typFer) {
         try {
-            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", fertilizerService.filter(nameBrand,origin,typFer)));
+            return ResponseEntity.ok(responseHandler.successAndPage("Lay list thanh cong", fertilizerService.filter(numberOfPage, sizeOfPage, nameBrand,origin,typFer).getContent(),fertilizerService.filter(numberOfPage, sizeOfPage, nameBrand,origin,typFer).getTotalPages()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
     }
-
-    @ApiOperation(value = "Tim theo loai phan bon")
-    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
-    @GetMapping("/findbytype")
-    public ResponseEntity<Object> getFertilizerByType(@RequestParam String nameType) {
-        try {
-            return ResponseEntity.ok(responseHandler.successResponse("Lay list thanh cong", fertilizerService.filterByType(nameType)));
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
-        }
-    }
-
 
     @ApiOperation(value = "Loc phan bón qua ten ten loai phan bon")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/filterbytype")
-    public ResponseEntity<Object> filterByType(@RequestParam(required = false) String typFer) {
+    public ResponseEntity<Object> filterByType(@RequestParam int pageNumber, @RequestParam int sizeOfPage, @RequestParam(required = false) String typFer) {
         try {
-            return ResponseEntity.ok(responseHandler.successResponse("Find Success",fertilizerService.filterByType(typFer)));
+            Page<Fertilizer> paged = fertilizerService.filterByType(pageNumber, sizeOfPage, typFer);
+            return ResponseEntity.ok(responseHandler.successAndPage("Find Success",paged.getContent(), paged.getTotalPages()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Loc phan bón qua ten xuat xu")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/filterbyorigin")
+    public ResponseEntity<Object> filterByOrigin(@RequestParam int pageNumber, @RequestParam int sizeOfPage, @RequestParam(required = false) String origin) {
+        try {
+            Page<Fertilizer> paged = fertilizerService.filterByOrigin(pageNumber, sizeOfPage, origin);
+            return ResponseEntity.ok(responseHandler.successAndPage("Find Success",paged.getContent(), paged.getTotalPages()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
+        }
+    }
+    @ApiOperation(value = "Loc phan bón qua brand")
+    @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
+    @GetMapping("/filterbybrand")
+    public ResponseEntity<Object> filterByBrand(@RequestParam int pageNumber, @RequestParam int sizeOfPage, @RequestParam(required = false) String brand) {
+        try {
+            Page<Fertilizer> paged = fertilizerService.filterByOrigin(pageNumber, sizeOfPage, brand);
+            return ResponseEntity.ok(responseHandler.successAndPage("Find Success",paged.getContent(), paged.getTotalPages()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
@@ -218,9 +229,10 @@ public class FertilizerApi {
     @ApiOperation(value = "Tim phan bón qua ten")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/findbyname")
-    public ResponseEntity<Object> findName(@RequestParam String name) {
+    public ResponseEntity<Object> findName(@RequestParam int pageNumber, @RequestParam int sizeOfPage, @RequestParam String name) {
         try {
-            return ResponseEntity.ok(responseHandler.successResponse("Find Success",fertilizerService.findFertilizerByName(name)));
+            Page<Fertilizer> page = fertilizerService.findFertilizerByName(pageNumber,sizeOfPage,name);
+            return ResponseEntity.ok(responseHandler.successAndPage("Find Success",page.getContent(),page.getTotalPages()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
@@ -228,10 +240,10 @@ public class FertilizerApi {
     @ApiOperation(value = "Loc phan bon theo gia")
     @ApiResponses({@ApiResponse(code = 200, message = "Thành công"), @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau")})
     @GetMapping("/fillbyprice")
-    public ResponseEntity<Object> fillByPrice(@RequestParam int price) {
+    public ResponseEntity<Object> fillByPrice(@RequestParam int numberOfPage, @RequestParam int sizeOfPage, @RequestParam int price) {
         try {
-            List<Fertilizer> list = fertilizerService.FertilizerNotDelete().stream().filter(s -> s.getPrice() <= price).toList();
-            return ResponseEntity.ok(responseHandler.successResponse("Find Success", list));
+            Page<Fertilizer> list = fertilizerService.filByPrice(numberOfPage,sizeOfPage, (float) price);
+            return ResponseEntity.ok(responseHandler.successAndPage("Find Success", list.getContent(), list.getTotalPages()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
