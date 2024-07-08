@@ -55,7 +55,7 @@ public class UserRoleApi {
         try{
             if (userRole.getNameRoles().isEmpty()){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Name not found!"));
-            }else if (userRolesService.getRoleByName(userRole.getNameRoles()) != null){
+            }else if (userRolesService.checkNameExist(userRole.getNameRoles())){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Name exist"));
             }
             userRolesService.AddOrEditUserRoles(userRole);

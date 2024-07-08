@@ -42,6 +42,10 @@ public class UserRolesService {
             throw new Exception(e.getMessage());
         }
     }
+
+    public boolean checkNameExist(String name){
+        return userRoles.findAll().stream().anyMatch(s -> s.getNameRoles().equals(name));
+    }
     
     public UserRoles GetUserRole(String id) throws Exception{
         try {
