@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -87,7 +88,36 @@ public class FertilizerApi {
         }
     }
 
-    @ApiOperation(value = "Tìm thông tin pphaanbon theo URL")
+    @ApiOperation(value = "Edit Image")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @GetMapping("/editImage")
+    public ResponseEntity<Object> editImage(@RequestParam String id, @RequestParam String url, @ModelAttribute MultipartFile imageFile){
+        try{
+            fertilizerService.editImageFertilizer(id,url,imageFile);
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Edit thanh cong"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @ApiOperation(value = "Delete Image")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Thành công"),
+            @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})
+    @DeleteMapping("/deleteimage")
+    public ResponseEntity<Object> deleteImage(@RequestParam String id, @RequestParam String url){
+        try{
+            fertilizerService.deleteImage(id,url);
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Delete thanh cong"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    @ApiOperation(value = "Tìm thông tin phan bon theo URL")
     @ApiResponses({
             @ApiResponse(code = 201, message = "Thành công"),
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình trả về")})

@@ -9,8 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.jdbc.Expectation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -66,11 +70,59 @@ public class BlogApi {
         }
     }
 
+    @ApiOperation(value = "Xoa 1 hinh trong anh")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
+    })
+    @DeleteMapping("/deleteimage")
+    public ResponseEntity<Object> deleteImage(@RequestParam String id){
+        try {
+            Blog blog = blogService.getBlog(id);
+            if (blog == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            if (blog.getImagePresent().equals("Deleted")){
+                return ResponseEntity.ok().body(responseHandler.successResponseButNotHaveContent("Hinh anh da bi xoa"));
+            }
+            Map deleted = blogService.deleteImage(blog.getImagePresent());
+            blog.setImagePresent("Deleted");
+            blogService.createOrSaveBlog(blog);
+            return ResponseEntity.ok(responseHandler.successResponse("Deleted", deleted));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
+
+    @ApiOperation(value = "Chinh sua hinh anh")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Thanh cong"),
+            @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
+    })
+    @PutMapping("/editimage")
+    public ResponseEntity<Object> editImage(@RequestParam String id, @ModelAttribute MultipartFile imageReplace){
+        try {
+            Blog blog = blogService.getBlog(id);
+            if (blog == null){
+                return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
+            }
+            if(imageReplace != null){
+                Map deleted = blogService.deleteImage(blog.getImagePresent());
+                blog.setImagePresent(blogService.editImage(imageReplace));
+                blogService.createOrSaveBlog(blog);
+                return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Thay anh thanh cong"));
+            }
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Không có gì để thay đổi"));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
+        }
+    }
     @ApiOperation(value = "Them moi 1 blog, request body la 1 blog")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Thanh cong"),
             @ApiResponse(code = 400, message = "Co loi xay ra trong qua trinh lay")
     })
+
     @PostMapping("/addblog")
     public ResponseEntity<Object> addNewBlog(@ModelAttribute Blog blog){
         try {
@@ -82,7 +134,7 @@ public class BlogApi {
                 }
             }
             blogService.createOrSaveBlog(blog);
-            return ResponseEntity.ok(responseHandler.successResponse("Tao moi thanh cong", blog));
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tao moi thanh cong"));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }

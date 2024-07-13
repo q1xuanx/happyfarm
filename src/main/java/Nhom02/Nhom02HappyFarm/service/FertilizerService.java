@@ -5,6 +5,7 @@ import Nhom02.Nhom02HappyFarm.entities.Fertilizer;
 import Nhom02.Nhom02HappyFarm.repository.CartItemRepository;
 import Nhom02.Nhom02HappyFarm.repository.FertilizerRepository;
 import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,6 +50,71 @@ public class FertilizerService {
         }
     }
 
+    public void editImageFertilizer(String id, String url, MultipartFile imageReplace) throws IOException, ExecutionException, InterruptedException {
+        Optional<Fertilizer> fer = fertilizerRepository.findAll().stream().filter(s->s.getIdFertilizer().equals(id)).findFirst();
+        if (fer.isPresent()){
+            Fertilizer editedFer = fer.get();
+            if (editedFer.getImageRepresent().equals(url)){
+                if (!url.equals("Deleted")) deleteImage(url);
+                String newImage = editImage(imageReplace);
+                editedFer.setImageRepresent(newImage);
+            }else {
+                List<String> listImage = editedFer.getImageOptional();
+                if(url.contains("Deleted-")){
+                    int splitToGetIndex = Integer.parseInt(url.split("-")[1]);
+                    String edited = editImage(imageReplace);
+                    listImage.set(splitToGetIndex, edited);
+                }else {
+                    for (int i = 0; i < listImage.size(); i++) {
+                        if (listImage.get(i).equals(url)) {
+                            deleteImage(listImage.get(i));
+                            String edited = editImage(imageReplace);
+                            listImage.set(i, edited);
+                            break;
+                        }
+                    }
+                }
+                editedFer.setImageOptional(listImage);
+            }
+            fertilizerRepository.save(editedFer);
+        }
+    }
+
+    public void deleteImage(String id, String url) throws IOException {
+        Optional<Fertilizer> fer = fertilizerRepository.findAll().stream().filter(s->s.getIdFertilizer().equals(id)).findFirst();
+        if (fer.isPresent()){
+            Fertilizer editedFer = fer.get();
+            if (editedFer.getImageRepresent().equals(url)){
+                Map newImage = deleteImage(editedFer.getImageRepresent());
+                editedFer.setImageRepresent("Deleted");
+            }else {
+                List<String> listImage = editedFer.getImageOptional();
+                for (int i = 0; i < listImage.size(); i++) {
+                    if (listImage.get(i).equals(url)) {
+                        Map deleted = deleteImage(url);
+                        listImage.set(i, "Deleted" + "-" + i);
+                        break;
+                    }
+                }
+                editedFer.setImageOptional(listImage);
+            }
+            fertilizerRepository.save(editedFer);
+        }
+    }
+
+    public String editImage(MultipartFile img) throws IOException, ExecutionException, InterruptedException {
+        CompletableFuture<String> uploaded = uploadImageAsync(img);
+        return uploaded.get();
+    }
+    public Map deleteImage(String url) throws IOException {
+        String publicId = splitToGetId(url);
+        Map delete = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        return delete;
+    }
+    public String splitToGetId(String url){
+        String[] splitUrl = url.split("/");
+        return splitUrl[splitUrl.length - 1].split("\\.")[0];
+    }
 
     public Fertilizer GetFertilizer(String id) throws IOException {
         try {
