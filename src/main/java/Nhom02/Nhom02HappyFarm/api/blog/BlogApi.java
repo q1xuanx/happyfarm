@@ -171,7 +171,7 @@ public class BlogApi {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse(blogService.checkExists(blog)));
             }
             blogService.createOrSaveBlog(blog);
-            return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", blog));
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Edit thanh cong"));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }

@@ -51,6 +51,9 @@ public class BlogService {
         try {
             LocalDate date = LocalDate.now();
             if (blog.getImage() != null) {
+                if (!blog.getImagePresent().isEmpty()){
+                    Map delete = deleteImage(blog.getImagePresent());
+                }
                 CompletableFuture<String> uploaded = uploadImageAsync(blog.getImage());
                 blog.setImagePresent(uploaded.get());
             }
