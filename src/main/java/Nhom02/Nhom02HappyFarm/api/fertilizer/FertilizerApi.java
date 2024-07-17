@@ -181,17 +181,17 @@ public class FertilizerApi {
             @ApiResponse(code = 400, message = "Có lỗi xảy ra trong quá trình gui yeu cau"),
             @ApiResponse(code = 404, message = "Khong tim thay id yeu cau")})
     @PutMapping("/editfertilizer/{id}")
-    public ResponseEntity<Object> EditFertilizer(@PathVariable String id, @Valid @RequestBody Fertilizer fertilizer) {
+    public ResponseEntity<Object> EditFertilizer(@PathVariable String id, @Valid @ModelAttribute Fertilizer fertilizer) {
         try {
             Fertilizer find = fertilizerService.GetFertilizer(id);
             if (find == null) {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Not found"));
             }
-            if (!fertilizerService.checkExistForAdd(fertilizer).equals("OK")){
+            if (!fertilizerService.checkExistForEdit(fertilizer).equals("OK")){
                 return ResponseEntity.badRequest().body(responseHandler.failResponse(fertilizerService.checkExistForEdit(fertilizer)));
             }
             fertilizerService.EditFertilizer(fertilizer);
-            return ResponseEntity.ok(responseHandler.successResponse("Edit thanh cong", fertilizer));
+            return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Edit thanh cong"));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));
         }
