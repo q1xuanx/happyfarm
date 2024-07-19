@@ -250,7 +250,7 @@ public class FertilizerApi {
     @GetMapping("/filterbybrand")
     public ResponseEntity<Object> filterByBrand(@RequestParam int pageNumber, @RequestParam int sizeOfPage, @RequestParam(required = false) String brand) {
         try {
-            Page<Fertilizer> paged = fertilizerService.filterByOrigin(pageNumber, sizeOfPage, brand);
+            Page<Fertilizer> paged = fertilizerService.filterByBrand(pageNumber, sizeOfPage, brand);
             return ResponseEntity.ok(responseHandler.successAndPage("Find Success",paged.getContent(), paged.getTotalPages()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(ex.getMessage()));

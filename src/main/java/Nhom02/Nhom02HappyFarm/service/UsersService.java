@@ -99,8 +99,6 @@ public class UsersService {
             return "Email not found";
         }else if (user.getPassword().isEmpty()){
             return "Password not found";
-        }else if (user.getFullName().isEmpty()){
-            return "Full name not found";
         }
         return "OK";
     }
