@@ -36,6 +36,7 @@ public class BannerApi {
             return ResponseEntity.badRequest().body(responseHandler.failResponse(e.getMessage()));
         }
     }
+    //Test jenkins
     @ApiOperation(value = "Add mot banner moi")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Thanh cong"),
