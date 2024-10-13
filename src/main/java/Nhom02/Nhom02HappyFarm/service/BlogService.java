@@ -48,21 +48,17 @@ public class BlogService {
     }
 
     public void createOrSaveBlog(Blog blog) throws IOException {
-        try {
-            LocalDate date = LocalDate.now();
-            if (blog.getImage() != null) {
-                if (!blog.getImagePresent().isEmpty()){
-                    Map delete = deleteImage(blog.getImagePresent());
-                }
-                CompletableFuture<String> uploaded = uploadImageAsync(blog.getImage());
-                blog.setImagePresent(uploaded.get());
+        LocalDate date = LocalDate.now();
+        if (blog.getImage() != null) {
+            if (!blog.getImagePresent().isEmpty()){
+                Map delete = deleteImage(blog.getImagePresent());
             }
-            blog.setTimeCreate(Date.valueOf(date));
-            blog.setUrl(fertilizerService.generateUrl(blog.getTitle()));
-            this.blog.save(blog);
-        }catch (Exception ex){
-            throw new IOException(ex.getMessage());
+            CompletableFuture<String> uploaded = uploadImageAsync(blog.getImage());
+            blog.setImagePresent(uploaded.get());
         }
+        blog.setTimeCreate(Date.valueOf(date));
+        blog.setUrl(fertilizerService.generateUrl(blog.getTitle()));
+        this.blog.save(blog);       
     }
     public String editImage(MultipartFile img) throws IOException, ExecutionException, InterruptedException {
         CompletableFuture<String> uploaded = uploadImageAsync(img);
