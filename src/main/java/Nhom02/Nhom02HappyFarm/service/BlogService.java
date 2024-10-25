@@ -47,7 +47,7 @@ public class BlogService {
         return cloudinary.uploader().upload(image.getBytes(), Map.of()).get("url").toString();
     }
 
-    public void createOrSaveBlog(Blog blog) throws IOException {
+    public void createOrSaveBlog(Blog blog) throws IOException, ExecutionException, InterruptedException {
         LocalDate date = LocalDate.now();
         if (blog.getImage() != null) {
             if (!blog.getImagePresent().isEmpty()){

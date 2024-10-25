@@ -79,7 +79,7 @@ public class FertilizerApi {
                 return ResponseEntity.badRequest().body(responseHandler.failResponse("Tên đã bị trùng"));
             }
             if (!fertilizerService.checkExistForAdd(fertilizer).equals("OK")){
-                return ResponseEntity.badRequest().body(responseHandler.failResponse(fertilizerService.checkExistForEdit(fertilizer)));
+                return ResponseEntity.badRequest().body(responseHandler.failResponse(fertilizerService.checkExistForAdd(fertilizer)));
             }
             fertilizerService.addNew(fertilizer);
             return ResponseEntity.ok(responseHandler.successResponseButNotHaveContent("Tạo mới thành công"));

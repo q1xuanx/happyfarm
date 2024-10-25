@@ -36,13 +36,17 @@ public class FertilizerService {
 
     public void addNew(Fertilizer fertilizer) throws IOException {
         try {
-            CompletableFuture<String> getImage = uploadImageAsync(fertilizer.getFileImageRepresent());
-            List<CompletableFuture<String>> listImageOptional = new ArrayList<>();
-            for (MultipartFile image : fertilizer.getFileImageOptional()) {
-                listImageOptional.add(uploadImageAsync(image));
+            if (fertilizer.getFileImageRepresent() != null) {
+                CompletableFuture<String> getImage = uploadImageAsync(fertilizer.getFileImageRepresent());
+                fertilizer.setImageRepresent(getImage.get());
             }
-            fertilizer.setImageRepresent(getImage.get());
-            fertilizer.setImageOptional(listImageOptional.stream().map(CompletableFuture::join).collect(Collectors.toList()));
+            if (fertilizer.getFileImageOptional() != null) {
+                List<CompletableFuture<String>> listImageOptional = new ArrayList<>();
+                for (MultipartFile image : fertilizer.getFileImageOptional()) {
+                    listImageOptional.add(uploadImageAsync(image));
+                }
+                fertilizer.setImageOptional(listImageOptional.stream().map(CompletableFuture::join).collect(Collectors.toList()));
+            }
             fertilizer.setUrl(generateUrl(fertilizer.getNameFertilizer()));
             fertilizerRepository.save(fertilizer);
         } catch (Exception e) {
@@ -227,10 +231,6 @@ public class FertilizerService {
             return "Details not found";
         } else if (fertilizer.getDescription().isEmpty()) {
             return "Description not found";
-        } else if (fertilizer.getFileImageRepresent() == null) {
-            return "Image represent not found";
-        } else if (fertilizer.getFileImageOptional() == null) {
-            return "Image optional not found";
         } else if (fertilizer.getDonViTinh().isEmpty()) {
             return "Don vi tinh not found";
         } else if (fertilizer.getThanhPhan().isEmpty()) {
