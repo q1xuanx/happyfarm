@@ -4,7 +4,6 @@ import Nhom02.Nhom02HappyFarm.response.ResponseHandler;
 import Nhom02.Nhom02HappyFarm.scraper.model.Price;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLDivElement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

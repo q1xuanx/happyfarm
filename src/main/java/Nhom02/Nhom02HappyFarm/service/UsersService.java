@@ -75,7 +75,7 @@ public class UsersService {
                 user.setRoles(roles);
                 users.save(user);
             }else {
-                Users existingUser = users.findById(user.getIdUser()).orElse(null);
+                Users existingUser = users.findById(user.getIdUser()).get();
                 existingUser.setUsername(user.getUsername());
                 existingUser.setFullName(user.getFullName());
                 existingUser.setEmail(user.getEmail());

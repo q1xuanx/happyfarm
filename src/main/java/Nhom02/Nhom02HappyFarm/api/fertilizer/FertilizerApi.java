@@ -67,8 +67,6 @@ public class FertilizerApi {
         }
     }
 
-
-
     @PostMapping("/addnew")
     @ApiOperation(value = "Thêm mới 1 phan bón")
     @ApiResponses({@ApiResponse(code = 201, message = "Thêm mới thành công"),
